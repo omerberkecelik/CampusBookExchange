@@ -1,0 +1,22 @@
+{# templates/registration/login.html #}
+{% extends "listings/base.html" %} {# This assumes your base.html is in listings/templates/listings/base.html #}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+  <h2>Login</h2>
+  {% if form.errors %}
+    <p style="color: red;">Your username and password didn't match. Please try again.</p>
+  {% endif %}
+
+  <form method="post" action="{% url 'login' %}"> {# The action should point to the 'login' named URL #}
+    {% csrf_token %}
+    <table>
+    {{ form.as_table }} {# Renders the form fields in a table structure #}
+    </table>
+    <button type="submit">Login</button>
+    <input type="hidden" name="next" value="{{ next }}"> {# Important for redirecting after login if 'next' is provided #}
+  </form>
+  <p><a href="{% url 'listings:register' %}">Don't have an account? Register</a></p>
+  <p><a href="{% url 'password_reset' %}">Forgot your password?</a></p> {# Django's auth.urls provides this #}
+{% endblock %}

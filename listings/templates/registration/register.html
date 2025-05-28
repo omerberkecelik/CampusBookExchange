@@ -1,0 +1,14 @@
+{# listings/templates/registration/register.html #}
+{% extends "listings/base.html" %} {# We'll create base.html soon #}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+  <h2>Sign Up</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }} {# Renders the form fields as paragraphs #}
+    <button type="submit">Sign Up</button>
+  </form>
+  <p><a href="{% url 'login' %}">Already have an account? Login</a></p>
+{% endblock %}

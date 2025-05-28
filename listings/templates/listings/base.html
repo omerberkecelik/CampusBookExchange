@@ -1,0 +1,52 @@
+{# listings/templates/listings/base.html #}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Campus Book Exchange{% endblock %}</title>
+    {# Link to your CSS file if you have one in static files #}
+    {# {% load static %} #}
+    {# <link rel="stylesheet" href="{% static 'css/style.css' %}"> #}
+    <style>
+        /* Optional: Basic styling to make the form button look like a link */
+        .logout-form {
+            display: inline; /* Keeps it on the same line as other nav items */
+        }
+        .logout-form button {
+            background: none;
+            border: none;
+            padding: 0;
+            color: blue; /* Or your link color */
+            text-decoration: underline;
+            cursor: pointer;
+            font: inherit; /* Inherit font from parent */
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="{% url 'listings:home' %}">Home</a>
+        {% if user.is_authenticated %}
+            <span>Hi {{ user.username }}!</span>
+            {# Replace the simple link with this form #}
+            <form class="logout-form" method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
+            {# Add other authenticated user links here, e.g., My Listings, Add Listing #}
+        {% else %}
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'listings:register' %}">Register</a>
+        {% endif %}
+    </nav>
+    <hr>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+    <footer>
+        <p>&copy; {% now "Y" %} Campus Book Exchange</p>
+    </footer>
+</body>
+</html>
