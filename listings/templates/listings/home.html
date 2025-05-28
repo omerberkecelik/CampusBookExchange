@@ -1,9 +1,45 @@
 {# listings/templates/listings/home.html #}
 {% extends "listings/base.html" %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Available Books{% endblock %}
 
 {% block content %}
-    <h1>Welcome to the Campus Book Exchange!</h1>
-    <p>This is the homepage. Listings will appear here soon.</p>
+    <h1>Available Books for Exchange</h1>
+
+    {% if listings %}
+        <ul>
+            {% for listing in listings %}
+                <li>
+                    <h3>{{ listing.book.title }}</h3>
+                    <p><strong>Author:</strong> {{ listing.book.author }}</p>
+                    {% if listing.book.edition %}
+                        <p><strong>Edition:</strong> {{ listing.book.edition }}</p>
+                    {% endif %}
+                    <p><strong>Condition:</strong> {{ listing.get_condition_display }}</p> {# Uses the human-readable choice value #}
+                    {% if listing.price %}
+                        <p><strong>Price:</strong> ${{ listing.price }}</p>
+                    {% else %}
+                        <p><strong>Price:</strong> Up for trade / Price not set</p>
+                    {% endif %}
+                    <p><strong>Listed by:</strong> {{ listing.student.username }}</p>
+                    {% if listing.student.profile.major %} {# Assuming you have Profile model linked to User #}
+                         <p><strong>Seller's Major:</strong> {{ listing.student.profile.major }}</p>
+                    {% endif %}
+                    <p><strong>Date Listed:</strong> {{ listing.date_listed|date:"F d, Y" }}</p>
+                    {% if listing.description %}
+                        <p><strong>Description:</strong> {{ listing.description }}</p>
+                    {% endif %}
+                    {# We'll add a link to a "listing detail" page later #}
+                    <hr>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No book listings are currently available. Check back soon!</p>
+        {% if user.is_authenticated %}
+            <p><a href="#">List your book now!</a></p> {# We'll link this to 'create_listing' URL later #}
+        {% else %}
+            <p><a href="{% url 'listings:register' %}">Register</a> or <a href="{% url 'login' %}">Login</a> to list your books.</p>
+        {% endif %}
+    {% endif %}
 {% endblock %}

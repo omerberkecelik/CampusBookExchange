@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login
 # Import your custom form from forms.py
 from .forms import CustomUserCreationForm
+from .models import Listing 
 
 def register(request):
     if request.method == 'POST':
@@ -23,9 +24,14 @@ def register(request):
     return render(request, 'registration/register.html', {'form': form})
 
 def home(request):
-    # Later this will render a template with listings fetched from the database
-    # For now, it just renders a static page.
-    return render(request, 'listings/home.html')
+    # THIS LINE DEFINES 'available_listings'
+    available_listings = Listing.objects.filter(status='AVL').select_related('book', 'student')
+    
+    # NOW 'available_listings' CAN BE USED IN THE CONTEXT
+    context = {
+        'listings': available_listings
+    }
+    return render(request, 'listings/home.html', context)
 
 # Add other views for your listings app here later, e.g.:
 # def all_listings(request):
