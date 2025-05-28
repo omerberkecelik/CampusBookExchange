@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "listings.apps.ListingsConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -73,9 +74,16 @@ WSGI_APPLICATION = "book_exchange_project.wsgi.application"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'campus_book_exchange_db', # The database created
+        'USER': 'book_exchange_user',     # The user created
+        'PASSWORD': 'Dolansana0234',      # The password for that user
+        'HOST': 'localhost',              # Or '127.0.0.1'
+        'PORT': '3306',                   # Default MySQL port
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'", 
+        },
     }
 }
 
