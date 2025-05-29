@@ -22,3 +22,29 @@ class CustomUserCreationForm(UserCreationForm):
         if commit:
             user.save()
         return user
+    
+
+# form for creating listings
+class ListingForm(forms.ModelForm):
+    # We might want to allow users to add details for a new book
+    # if it's not already in the database. For simplicity now,
+    # we'll assume the Book must already exist.
+    # Alternatively, you could add Book fields directly here.
+
+    class Meta:
+        model = Listing
+        fields = ['book', 'condition', 'price', 'description'] # Fields user will fill
+        # 'student' will be set automatically from the logged-in user in the view.
+        # 'status' will default to 'Available' (AVL) as per model default.
+        # 'date_listed' is auto_now_add.
+
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 4}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Optional: make 'book' field easier to use, e.g., by ordering
+        self.fields['book'].queryset = Book.objects.order_by('title')
+        # Optional: Add help text or placeholders
+        self.fields['price'].help_text = "Leave blank if for trade only or price not set."
