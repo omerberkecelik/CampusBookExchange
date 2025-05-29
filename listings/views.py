@@ -33,10 +33,25 @@ def home(request):
     }
     return render(request, 'listings/home.html', context)
 
-# Add other views for your listings app here later, e.g.:
-# def all_listings(request):
-#     pass
-# def listing_detail(request, listing_id):
-#     pass
-# def create_listing(request):
-#     pass
+
+# view for creating listings
+@login_required # This decorator ensures only logged-in users can access this view
+def create_listing(request):
+    if request.method == 'POST':
+        form = ListingForm(request.POST, request.FILES or None) # Add request.FILES for potential image uploads later
+        if form.is_valid():
+            listing = form.save(commit=False) # Don't save to DB immediately
+            listing.student = request.user    # Set the student to the currently logged-in user
+            listing.status = 'AVL'            # Set status to Available by default
+            listing.save()                    # Now save to the database
+            
+            messages.success(request, 'Your book listing has been created successfully!')
+            return redirect('listings:home') # Redirect to homepage (or a listing detail page later)
+    else: # If GET request or form was invalid and re-rendered
+        form = ListingForm()
+
+    context = {
+        'form': form,
+        'page_title': 'List a New Book' # Optional title for the template
+    }
+    return render(request, 'listings/create_listing.html', context)
