@@ -2,9 +2,14 @@
 
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
-# Import your custom form from forms.py
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, ListingForm
 from .models import Listing 
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.contrib.auth import login
+from .forms import CustomUserCreationForm, ListingForm
+from .models import Listing, Book
+from django.contrib import messages
 
 def register(request):
     if request.method == 'POST':

@@ -12,5 +12,6 @@ urlpatterns = [
     # Maps the /register/ path within this app to the 'register' view
     path('register/', views.register, name='register'),
 
-    # Add other listings-specific URLs here later
+    # New URL pattern for creating a listing
+    path('listings/new/', views.create_listing, name='create_listing'),
 ]

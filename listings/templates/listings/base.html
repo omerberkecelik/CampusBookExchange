@@ -1,46 +1,70 @@
 {# listings/templates/listings/base.html #}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Campus Book Exchange{% endblock %}</title>
+    <style>
+        /* Basic styles for nav logout form (already there) */
+        .logout-form { display: inline; }
+        .logout-form button { background: none; border: none; padding: 0; color: blue; text-decoration: underline; cursor: pointer; font: inherit; }
+        
+        /* Styles for Django messages (can be moved to a CSS file later) */
+        .messages {
+            list-style-type: none;
+            padding: 0;
+            margin: 0 0 15px 0; /* Add some bottom margin */
+        }
+        .messages li {
+            padding: 10px 15px; /* Adjusted padding */
+            margin-bottom: 10px;
+            border-radius: 4px;
+            color: #fff; /* Default text color for messages */
+            font-size: 0.95em;
+        }
+        .messages li.success { background-color: #28a745; } /* Green for success */
+        .messages li.error { background-color: #dc3545; } /* Red for error */
+        .messages li.warning { background-color: #ffc107; color: #212529; } /* Yellow for warning, dark text */
+        .messages li.info { background-color: #17a2b8; } /* Blue for info */
+        .messages li.debug { background-color: #6c757d; } /* Gray for debug */
+
+    </style>
+    {% block page_styles %}
+    {# Page-specific styles will go here #}
+    {% endblock page_styles %}
     {# Link to your CSS file if you have one in static files #}
     {# {% load static %} #}
     {# <link rel="stylesheet" href="{% static 'css/style.css' %}"> #}
-    <style>
-        /* Optional: Basic styling to make the form button look like a link */
-        .logout-form {
-            display: inline; /* Keeps it on the same line as other nav items */
-        }
-        .logout-form button {
-            background: none;
-            border: none;
-            padding: 0;
-            color: blue; /* Or your link color */
-            text-decoration: underline;
-            cursor: pointer;
-            font: inherit; /* Inherit font from parent */
-        }
-    </style>
 </head>
 <body>
     <nav>
-        <a href="{% url 'listings:home' %}">Home</a>
+        <a href="{% url 'listings:home' %}">Home</a> |
         {% if user.is_authenticated %}
-            <span>Hi {{ user.username }}!</span>
-            {# Replace the simple link with this form #}
+            <span>Hi {{ user.username }}!</span> |
+            <a href="{% url 'listings:create_listing' %}">List a Book</a> |
             <form class="logout-form" method="post" action="{% url 'logout' %}">
                 {% csrf_token %}
                 <button type="submit">Logout</button>
             </form>
-            {# Add other authenticated user links here, e.g., My Listings, Add Listing #}
         {% else %}
-            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'login' %}">Login</a> |
             <a href="{% url 'listings:register' %}">Register</a>
         {% endif %}
     </nav>
     <hr>
+
+    {# --- DJANGO MESSAGES FRAMEWORK DISPLAY --- #}
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {# --- END DJANGO MESSAGES FRAMEWORK DISPLAY --- #}
+    
     <main>
         {% block content %}
         {% endblock %}
