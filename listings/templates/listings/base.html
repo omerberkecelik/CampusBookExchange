@@ -3,74 +3,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Campus Book Exchange{% endblock %}</title>
-    <style>
-        /* Basic styles for nav logout form (already there) */
-        .logout-form { display: inline; }
-        .logout-form button { background: none; border: none; padding: 0; color: blue; text-decoration: underline; cursor: pointer; font: inherit; }
-        
-        /* Styles for Django messages (can be moved to a CSS file later) */
-        .messages {
-            list-style-type: none;
-            padding: 0;
-            margin: 0 0 15px 0; /* Add some bottom margin */
-        }
-        .messages li {
-            padding: 10px 15px; /* Adjusted padding */
-            margin-bottom: 10px;
-            border-radius: 4px;
-            color: #fff; /* Default text color for messages */
-            font-size: 0.95em;
-        }
-        .messages li.success { background-color: #28a745; } /* Green for success */
-        .messages li.error { background-color: #dc3545; } /* Red for error */
-        .messages li.warning { background-color: #ffc107; color: #212529; } /* Yellow for warning, dark text */
-        .messages li.info { background-color: #17a2b8; } /* Blue for info */
-        .messages li.debug { background-color: #6c757d; } /* Gray for debug */
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Campus Book Exchange{% endblock %}</title>
 
-    </style>
-    {% block page_styles %}
-    {# Page-specific styles will go here #}
-    {% endblock page_styles %}
-    {# Link to your CSS file if you have one in static files #}
-    {# {% load static %} #}
-    {# <link rel="stylesheet" href="{% static 'css/style.css' %}"> #}
+  {% load static %}
+  <!-- Google Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Nunito:wght@300;400;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Our main stylesheet -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+  {% block page_styles %}{% endblock %}
 </head>
 <body>
-    <nav>
-        <a href="{% url 'listings:home' %}">Home</a> |
-        {% if user.is_authenticated %}
-            <span>Hi {{ user.username }}!</span> |
-            <a href="{% url 'listings:create_listing' %}">List a Book</a> |
-            <form class="logout-form" method="post" action="{% url 'logout' %}">
-                {% csrf_token %}
-                <button type="submit">Logout</button>
-            </form>
-        {% else %}
-            <a href="{% url 'login' %}">Login</a> |
-            <a href="{% url 'listings:register' %}">Register</a>
-        {% endif %}
-    </nav>
-    <hr>
 
-    {# --- DJANGO MESSAGES FRAMEWORK DISPLAY --- #}
+  <div class="container">
+    <nav>
+      <a href="{% url 'listings:home' %}">Home</a>
+      {% if user.is_authenticated %}
+        <span>Hi {{ user.username }}!</span>
+        <a href="{% url 'listings:create_listing' %}">List a Book</a>
+        <a href="{% url 'listings:suggest_book' %}">Suggest Book</a>
+        <a href="{% url 'listings:my_listings' %}">My Listings</a>
+        <a href="{% url 'listings:reports' %}">Reports</a>
+        <form class="logout-form" method="post" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button type="submit">Logout</button>
+        </form>
+      {% else %}
+        <a href="{% url 'login' %}">Login</a>
+        <a href="{% url 'listings:register' %}">Register</a>
+      {% endif %}
+    </nav>
+
+    <hr />
+
     {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
+      <ul class="messages">
+        {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+            {{ message }}
+          </li>
+        {% endfor %}
+      </ul>
     {% endif %}
-    {# --- END DJANGO MESSAGES FRAMEWORK DISPLAY --- #}
-    
+
     <main>
-        {% block content %}
-        {% endblock %}
+      {% block content %}{% endblock %}
     </main>
-    <footer>
-        <p>&copy; {% now "Y" %} Campus Book Exchange</p>
-    </footer>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>&copy; {% now "Y" %} Campus Book Exchange</p>
+    </div>
+  </footer>
 </body>
 </html>
