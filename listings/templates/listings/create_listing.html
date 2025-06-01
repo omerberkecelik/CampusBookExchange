@@ -1,14 +1,16 @@
 {# listings/templates/listings/create_listing.html #}
 {% extends "listings/base.html" %}
 
-{% block title %}{{ page_title|default:"Create New Listing" }}{% endblock %}
+{% block title %}
+  {{ page_title|default:"Create New Listing" }}
+{% endblock %}
 
 {% block page_styles %}
 <style>
     .form-container {
         width: 100%;
-        max-width: 600px; /* Limit form width for better readability */
-        margin: 20px auto; /* Center the form */
+        max-width: 600px;
+        margin: 20px auto;
         padding: 20px;
         border: 1px solid #ddd;
         border-radius: 5px;
@@ -33,7 +35,7 @@
         padding: 10px;
         border: 1px solid #ccc;
         border-radius: 4px;
-        box-sizing: border-box; /* Ensures padding and border don't add to width */
+        box-sizing: border-box;
         font-size: 1em;
     }
     .form-field-wrapper textarea {
@@ -46,8 +48,8 @@
         color: #666;
         margin-top: 4px;
     }
-    .form-field-wrapper .error-message { /* For individual field errors */
-        color: #D8000C; /* Red for errors */
+    .form-field-wrapper .error-message {
+        color: #D8000C;
         background-color: #FFD2D2;
         border: 1px solid #D8000C;
         padding: 8px;
@@ -55,7 +57,7 @@
         border-radius: 4px;
         font-size: 0.9em;
     }
-    .form-errors-non-field { /* For non-field errors (form.non_field_errors) */
+    .form-errors-non-field {
         color: #D8000C;
         background-color: #FFD2D2;
         border: 1px solid #D8000C;
@@ -64,7 +66,7 @@
         border-radius: 4px;
     }
     .submit-button {
-        background-color: #28a745; /* Green */
+        background-color: #28a745;
         color: white;
         padding: 12px 20px;
         border: none;
@@ -92,10 +94,11 @@
   <div class="form-container">
     <h2>{{ page_title|default:"List Your Book for Exchange/Sale" }}</h2>
 
-    <form method="post" novalidate>
+    {# Added enctype here #}
+    <form method="post" enctype="multipart/form-data" novalidate>
       {% csrf_token %}
 
-      {# Display non-field errors (e.g., form-wide validation errors) #}
+      {# Non-field errors (form.non_field_errors) #}
       {% if form.non_field_errors %}
         <div class="form-errors-non-field">
           {% for error in form.non_field_errors %}
@@ -104,11 +107,11 @@
         </div>
       {% endif %}
 
-      {# Manual field rendering #}
+      {# Render each field manually to show labels, help_text, and per-field errors #}
       {% for field in form %}
         <div class="form-field-wrapper">
           {{ field.label_tag }}
-          {{ field }} {# This renders the input widget #}
+          {{ field }}
           {% if field.help_text %}
             <small class="help-text">{{ field.help_text }}</small>
           {% endif %}
