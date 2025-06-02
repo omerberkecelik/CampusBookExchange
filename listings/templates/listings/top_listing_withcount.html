@@ -1,0 +1,20 @@
+{% extends "listings/base.html" %}
+{% block title %}Top Listing + Count{% endblock %}
+
+{% block content %}
+  <h1>Top Listing by Number of Offers</h1>
+  {% if listing %}
+    <h2><a href="{% url 'listings:listing_detail' listing.pk %}">
+      {{ listing.book.title }}</a></h2>
+    <p><strong>Author:</strong> {{ listing.book.author }}</p>
+    {% if listing.price %}
+      <p><strong>Price:</strong> ${{ listing.price }}</p>
+    {% endif %}
+    <p><strong>Posted by:</strong> {{ listing.student.username }}</p>
+    <p><strong>Date Listed:</strong> {{ listing.date_listed|date:"Y-m-d" }}</p>
+    <p><strong>Total Offers:</strong> {{ num_offers }}</p>
+  {% else %}
+    <p>No listings found.</p>
+  {% endif %}
+  <p><a href="{% url 'listings:home' %}">← Back to Home</a></p>
+{% endblock %}

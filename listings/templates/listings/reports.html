@@ -1,0 +1,62 @@
+{% extends "listings/base.html" %}
+{% block title %}Project Reports (Raw SQL){% endblock %}
+
+{% block content %}
+  <h1>Project Reports</h1>
+
+  <!-- 1) Listing with Most Offers -->
+  <section style="margin-bottom: 40px;">
+    <h2>1) Listing with Most Offers</h2>
+    {% if top_listing_raw %}
+      <p>
+        <strong>Listing ID:</strong> {{ top_listing_raw.listing_id }}<br>
+        <strong>Book Title:</strong> {{ top_listing_raw.book_title }}<br>
+        <strong>Total Offers:</strong> {{ top_listing_raw.total_offers }}
+      </p>
+    {% else %}
+      <p>No listings with offers found.</p>
+    {% endif %}
+  </section>
+
+  <hr>
+
+  <!-- 2) Number of Listings per Course -->
+  <section style="margin-bottom: 40px;">
+    <h2>2) Number of Listings per Course</h2>
+    {% if courses_data_raw %}
+      <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+        <thead style="background-color: #f2f2f2;">
+          <tr>
+            <th>Course Code</th>
+            <th>Course Name</th>
+            <th>Listing Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for course in courses_data_raw %}
+            <tr>
+              <td>{{ course.course_code }}</td>
+              <td>{{ course.course_name }}</td>
+              <td>{{ course.listing_count }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>No course/listing data available.</p>
+    {% endif %}
+  </section>
+
+  <hr>
+
+  <!-- 3) Listings Created in the Last 7 Days -->
+  <section style="margin-bottom: 40px;">
+    <h2>3) Listings Created in the Last 7 Days</h2>
+    <p>
+      <strong>{{ recent_count_raw }}</strong> listing(s) were created in the last 7 days.
+    </p>
+  </section>
+
+  <hr>
+  <p><a href="{% url 'listings:home' %}">← Back to Home</a></p>
+{% endblock %}

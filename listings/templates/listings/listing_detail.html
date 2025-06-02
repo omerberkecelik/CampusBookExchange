@@ -1,0 +1,34 @@
+{% extends "listings/base.html" %}
+{% block title %}Listing Details{% endblock %}
+
+{% block content %}
+  <h1>{{ listing.book.title }}</h1>
+  <p><strong>Author:</strong> {{ listing.book.author }}</p>
+  {% if listing.book.edition %}
+    <p><strong>Edition:</strong> {{ listing.book.edition }}</p>
+  {% endif %}
+  <p><strong>Condition:</strong> {{ listing.get_condition_display }}</p>
+  {% if listing.price %}
+    <p><strong>Price:</strong> ${{ listing.price }}</p>
+  {% else %}
+    <p><strong>Price:</strong> Trade only / Not set</p>
+  {% endif %}
+  <p><strong>Seller:</strong> {{ listing.student.username }}</p>
+  <p><strong>Date Listed:</strong> {{ listing.date_listed|date:"F d, Y" }}</p>
+  {% if listing.description %}
+    <p><strong>Description:</strong> {{ listing.description }}</p>
+  {% endif %}
+  <hr>
+
+  {% if user.is_authenticated %}
+    {% if user != listing.student %}
+      <a href="{% url 'listings:make_offer' listing.pk %}">Make an Offer</a>
+    {% else %}
+      <a href="{% url 'listings:manage_offers' listing.pk %}">Manage Offers</a>
+    {% endif %}
+  {% else %}
+    <p><a href="{% url 'login' %}">Login</a> to make an offer.</p>
+  {% endif %}
+
+  <p><a href="{% url 'listings:home' %}">← Back to Home</a></p>
+{% endblock %}

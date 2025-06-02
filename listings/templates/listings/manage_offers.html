@@ -1,0 +1,49 @@
+{% extends "listings/base.html" %}
+{% block title %}Manage Offers{% endblock %}
+
+{% block content %}
+  <h1>Offers on “{{ listing.book.title }}”</h1>
+  <p><strong>Listing Status:</strong> {{ listing.get_status_display }}</p>
+
+  {% if offers %}
+    <table border="1" cellpadding="8" cellspacing="0" style="width:100%; border-collapse:collapse;">
+      <thead style="background-color:#f2f2f2;">
+        <tr>
+          <th>Buyer</th>
+          <th>Offer Price</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for offer in offers %}
+          <tr>
+            <td>{{ offer.buyer.username }}</td>
+            <td>${{ offer.offer_price }}</td>
+            <td>{{ offer.get_status_display }}</td>
+            <td>
+              {% if offer.status == 'PEN' %}
+                <form method="post" style="display:inline;">
+                  {% csrf_token %}
+                  <input type="hidden" name="offer_id" value="{{ offer.pk }}">
+                  <button type="submit" name="action" value="accept">Accept</button>
+                </form>
+                <form method="post" style="display:inline;">
+                  {% csrf_token %}
+                  <input type="hidden" name="offer_id" value="{{ offer.pk }}">
+                  <button type="submit" name="action" value="reject">Reject</button>
+                </form>
+              {% else %}
+                —
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No offers yet.</p>
+  {% endif %}
+
+  <p><a href="{% url 'listings:listing_detail' listing.pk %}">← Back to Details</a></p>
+{% endblock %}

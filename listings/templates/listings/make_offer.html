@@ -1,0 +1,12 @@
+{% extends "listings/base.html" %}
+{% block title %}Make an Offer{% endblock %}
+
+{% block content %}
+  <h1>Offer on “{{ listing.book.title }}”</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit Offer</button>
+  </form>
+  <p><a href="{% url 'listings:listing_detail' listing.pk %}">← Back to Details</a></p>
+{% endblock %}

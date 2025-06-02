@@ -1,0 +1,29 @@
+{% extends "listings/base.html" %}
+{% block title %}Listings per Course{% endblock %}
+
+{% block content %}
+  <h1>Number of Listings per Course (Raw SQL)</h1>
+  {% if courses_data %}
+    <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+      <thead style="background-color: #f2f2f2;">
+        <tr>
+          <th>Course Code</th>
+          <th>Course Name</th>
+          <th>Listing Count</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for course in courses_data %}
+          <tr>
+            <td>{{ course.course_code }}</td>
+            <td>{{ course.course_name }}</td>
+            <td>{{ course.listing_count }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No course/listing data available.</p>
+  {% endif %}
+  <p><a href="{% url 'listings:home' %}">← Back to Home</a></p>
+{% endblock %}

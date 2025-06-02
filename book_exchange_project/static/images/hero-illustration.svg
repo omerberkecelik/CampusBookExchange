@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 200 200"
+    width="200"
+    height="200"
+>
+  <!-- 1) Arka planı koyu kahverengi (#5D3A1A) yapıyoruz -->
+  <rect
+    x="10"
+    y="10"
+    width="180"
+    height="180"
+    rx="20"
+    ry="20"
+    fill="#5D3A1A"
+  />
+
+  <!-- 2) Üç adet beyaz çizgiyi değiştirmeden bırakıyoruz (fill="#FFFFFF") -->
+  <rect
+    x="40"
+    y="40"
+    width="120"
+    height="8"
+    fill="#FFFFFF"
+  />
+  <rect
+    x="40"
+    y="70"
+    width="120"
+    height="8"
+    fill="#FFFFFF"
+  />
+  <rect
+    x="40"
+    y="100"
+    width="120"
+    height="8"
+    fill="#FFFFFF"
+  />
+
+  <!-- 3) “Campus Book” yazısını da beyaz bırakmak isterseniz -->
+  <text
+    x="100"
+    y="155"
+    font-family="Merriweather, serif"
+    font-size="24"
+    text-anchor="middle"
+    fill="#FFFFFF"
+  >
+    Campus Book
+  </text>
+</svg>

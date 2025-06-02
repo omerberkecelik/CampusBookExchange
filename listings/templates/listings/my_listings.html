@@ -1,0 +1,31 @@
+{% extends "listings/base.html" %}
+{% block title %}My Listings{% endblock %}
+
+{% block content %}
+  <h1>My Listings</h1>
+  {% if listings %}
+    <ul>
+      {% for listing in listings %}
+        <li>
+          <h3>
+            <a href="{% url 'listings:listing_detail' listing.pk %}">
+              {{ listing.book.title }}
+            </a> ({{ listing.get_status_display }})
+          </h3>
+          <p>
+            <strong>Price:</strong> 
+            {% if listing.price %}$ {{ listing.price }}{% else %}Trade only{% endif %}
+          </p>
+          <p>
+            <a href="{% url 'listings:edit_listing' listing.pk %}">Edit</a> |
+            <a href="{% url 'listings:delete_listing' listing.pk %}">Delete</a>
+          </p>
+          <hr>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>You have no listings. <a href="{% url 'listings:create_listing' %}">List your first book.</a></p>
+  {% endif %}
+  <p><a href="{% url 'listings:home' %}">← Back to Home</a></p>
+{% endblock %}

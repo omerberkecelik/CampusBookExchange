@@ -1,0 +1,19 @@
+{# listings/templates/listings/suggest_book.html #}
+{% extends 'listings/base.html' %}
+
+{% block title %}Suggest a New Book{% endblock %}
+
+{% block content %}
+  <h1>Suggest a New Book</h1>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit"
+      style="padding: 8px 15px; background-color: #3498db; color: #fff; border: none; border-radius: 4px;">
+      Submit Suggestion
+    </button>
+    &nbsp;
+    <a href="{% url 'listings:home' %}">Cancel</a>
+  </form>
+{% endblock %}

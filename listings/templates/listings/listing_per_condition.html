@@ -1,0 +1,38 @@
+{% extends "listings/base.html" %}
+{% block title %}Filter by Condition (Raw SQL){% endblock %}
+
+{% block content %}
+  <h1>Listings Filtered by Condition</h1>
+
+  <form method="get">
+    <select name="condition">
+      <option value="">All Conditions</option>
+      {% for code, label in listings.0.CONDITION_CHOICES %}
+        <option value="{{ code }}" {% if selected_condition == code %}selected{% endif %}>
+          {{ label }}
+        </option>
+      {% endfor %}
+    </select>
+    <button type="submit">Filter</button>
+  </form>
+
+  {% if data %}
+    <ul>
+      {% for item in data %}
+        <li>
+          {% comment %} item.id is listing ID; link to detail page {% endcomment %}
+          <a href="{% url 'listings:listing_detail' item.id %}">
+            Listing #{{ item.id }}
+          </a> –
+          Condition: {{ item.condition }} –
+          Price: 
+          {% if item.price %} ${{ item.price }} {% else %} Trade only {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No listings match that condition.</p>
+  {% endif %}
+
+  <p><a href="{% url 'listings:home' %}">← Back to Home</a></p>
+{% endblock %}
