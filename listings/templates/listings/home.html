@@ -1,107 +1,98 @@
-{# listings/templates/listings/home.html #}
-
 {% extends "listings/base.html" %}
-{% load static %}      {# ← load static after extends, not before #}
+{% load static %}
 
 {% block title %}Available Books{% endblock %}
 
 {% block content %}
-  <div class="container">
-    {# —————— HERO SECTION —————— #}
-    <div class="hero">
-      <!-- Now that “static” is loaded, this will work: -->
-      <img
-        src="{% static 'images/hero-illustration.svg' %}"
-        alt="Campus Book Exchange"
-        class="hero-image"
-      />
-
-      <h1>Welcome to Campus Book Exchange</h1>
-      <p>Browse, buy, or trade textbooks with your classmates.</p>
-      <p>Find great deals on used books and make your next semester a little easier!</p>
-    </div>
-
-    {# —————— FILTER / SEARCH FORM —————— #}
-    <form method="get" class="filter-form">
-      <input
-        class="input search-field"
-        type="text"
-        name="q"
-        placeholder="Search by title, author, or ISBN"
-        value="{{ query }}"
-      />
-      <select class="input" name="condition">
-        <option value="">All Conditions</option>
-        {% for code,label in all_conditions %}
-          <option value="{{ code }}" {% if selected_condition == code %}selected{% endif %}>
-            {{ label }}
-          </option>
-        {% endfor %}
-      </select>
-      <select class="input" name="course">
-        <option value="">All Courses</option>
-        {% for course in all_courses %}
-          <option 
-            value="{{ course.pk }}" 
-            {% if selected_course|stringformat:"s" == course.pk|stringformat:"s" %}selected{% endif %}
-          >
-            {{ course.course_code }} – {{ course.course_name }}
-          </option>
-        {% endfor %}
-      </select>
-      <button class="button" type="submit">Filter</button>
-      {% if query or selected_condition or selected_course %}
-        <a href="{% url 'listings:home' %}" class="button" style="background-color: #eb984e; margin-left: 8px;">
-          Clear
-        </a>
-      {% endif %}
-    </form>
-
-    <hr />
-
-    {# —————— LIST OF AVAILABLE LISTINGS —————— #}
-    {% if listings %}
-      {% for listing in listings %}
-        <div class="card">
-          <h2>
-            <a href="{% url 'listings:listing_detail' listing.pk %}">
-              {{ listing.book.title }}
-            </a>
-          </h2>
-          <p>
-            <strong>Author:</strong> {{ listing.book.author }} &nbsp;|&nbsp;
-            <strong>Condition:</strong> {{ listing.get_condition_display }}
-            {% if listing.price %}
-              &nbsp;|&nbsp; <strong>Price:</strong> ${{ listing.price }}
-            {% else %}
-              &nbsp;|&nbsp; <strong>Price:</strong> Trade only
-            {% endif %}
-          </p>
-          <p>
-            <strong>Seller:</strong> {{ listing.student.username }}
-            {% if listing.student.profile.major %}
-              &nbsp;|&nbsp; <strong>Major:</strong> {{ listing.student.profile.major }}
-            {% endif %}
-          </p>
-          <p><strong>Date Listed:</strong> {{ listing.date_listed|date:"F d, Y" }}</p>
-          {% if listing.description %}
-            <p><strong>Description:</strong> {{ listing.description }}</p>
-          {% endif %}
-        </div>
-      {% endfor %}
-    {% else %}
-      <p>No book listings are currently available.</p>
-      {% if user.is_authenticated %}
-        <p>
-          <a href="{% url 'listings:create_listing' %}" class="button">List Your Book Now!</a>
-        </p>
-      {% else %}
-        <p>
-          <a href="{% url 'listings:register' %}" class="button">Register</a> or 
-          <a href="{% url 'login' %}" class="button">Login</a> to list your books.
-        </p>
-      {% endif %}
-    {% endif %}
-
+  <div class="hero">
+    <img
+      src="{% static 'images/hero-illustration.svg' %}"
+      alt="Campus Book Exchange"
+      class="hero-image"
+    />
+    <h1>Welcome to Campus Book Exchange</h1>
+    <p>Browse, buy, or trade textbooks with your classmates.</p>
+    <p>Find great deals on used books and make your next semester a little easier!</p>
   </div>
+
+  <form method="get" class="filter-form">
+    <input
+      class="input search-field"
+      type="text"
+      name="q"
+      placeholder="Search by title, author, or ISBN"
+      value="{{ query }}"
+    />
+    <select class="input" name="condition">
+      <option value="">All Conditions</option>
+      {% for code,label in all_conditions %}
+        <option value="{{ code }}" {% if selected_condition == code %}selected{% endif %}>
+          {{ label }}
+        </option>
+      {% endfor %}
+    </select>
+    <select class="input" name="course">
+      <option value="">All Courses</option>
+      {% for course in all_courses %}
+        <option
+          value="{{ course.pk }}"
+          {% if selected_course|stringformat:"s" == course.pk|stringformat:"s" %}selected{% endif %}
+        >
+          {{ course.course_code }} – {{ course.course_name }}
+        </option>
+      {% endfor %}
+    </select>
+    <button class="button" type="submit">Filter</button>
+    {% if query or selected_condition or selected_course %}
+      <a href="{% url 'listings:home' %}" class="button clear-button">Clear</a>
+    {% endif %}
+  </form>
+
+  <hr />
+
+  {% if listings %}
+    {% for listing in listings %}
+      <div class="card">
+        <h2>
+          <a href="{% url 'listings:listing_detail' listing.pk %}">
+            {{ listing.book.title }}
+          </a>
+        </h2>
+        <p>
+          <strong>Author:</strong> {{ listing.book.author }}
+          &nbsp;|&nbsp;
+          <strong>Condition:</strong> {{ listing.get_condition_display }}
+          {% if listing.price %}
+            &nbsp;|&nbsp; <strong>Price:</strong> ${{ listing.price }}
+          {% else %}
+            &nbsp;|&nbsp; <strong>Price:</strong> Trade only
+          {% endif %}
+        </p>
+        <p>
+          <strong>Seller:</strong> {{ listing.student.username }}
+          {% if listing.student.profile.major %}
+            &nbsp;|&nbsp; <strong>Major:</strong> {{ listing.student.profile.major }}
+          {% endif %}
+        </p>
+        <p><strong>Date Listed:</strong> {{ listing.date_listed|date:"F d, Y" }}</p>
+        {% if listing.description %}
+          <p><strong>Description:</strong> {{ listing.description }}</p>
+        {% endif %}
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>No book listings are currently available.</p>
+    {% if user.is_authenticated %}
+      <p>
+        <a href="{% url 'listings:create_listing' %}" class="button">List Your Book Now!</a>
+      </p>
+    {% else %}
+      <p>
+        <a href="{% url 'listings:register' %}" class="button">Register</a>
+        or
+        <a href="{% url 'login' %}" class="button">Login</a>
+        to list your books.
+      </p>
+    {% endif %}
+  {% endif %}
 {% endblock %}

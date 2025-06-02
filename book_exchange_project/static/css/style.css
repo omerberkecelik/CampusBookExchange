@@ -1,30 +1,28 @@
-/* static/css/style.css */
-
-/* 1) Global settings: font stacks and light-brown page background */
+/* 1) Genel stil ve sayfa arka planı */
 body {
   font-family: 'Nunito', sans-serif;
-  background-color: #F5E1C0; /* light warm brown */
-  color: #3B2F2F;            /* dark gray text for contrast */
+  background-color: #F5E1C0;
+  color: #3B2F2F;
   margin: 0;
   padding: 0;
 }
 
-/* 2) Headings use a serif font (“Merriweather”) */
+/* 2) Başlık fontu */
 h1, h2, h3 {
   font-family: 'Merriweather', serif;
-  color: #5D3A1A; /* dark brown headings */
+  color: #5D3A1A;
   margin-top: 0;
 }
 
-/* 3) Container: centers content with some padding */
+/* 3) .container: Kenarlardan boşluk bırakır, içerikleri ortalar */
 .container {
   width: 90%;
-  max-width: 800px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 20px;
 }
 
-/* 4) Hero section: centers hero image and text */
+/* 4) Hero bölümü */
 .hero {
   text-align: center;
   margin-bottom: 30px;
@@ -36,20 +34,20 @@ h1, h2, h3 {
   margin-bottom: 20px;
 }
 
-/* 5) Inputs (search/filter) */
+/* 5) Giriş alanları (arama, filtre) */
 .input {
   padding: 8px 12px;
   font-size: 1em;
   margin-right: 8px;
-  border: 1px solid #A6896C; /* medium brown border */
+  border: 1px solid #A6896C;
   border-radius: 4px;
-  background-color: #FFF9F1; /* very light beige */
+  background-color: #FFF9F1;
   color: #3B2F2F;
 }
 
-/* 6) Buttons: warm brown tones */
+/* 6) Düğmeler */
 .button {
-  background-color: #8B5F3D; /* medium brown */
+  background-color: #8B5F3D;
   color: #fff;
   padding: 8px 16px;
   border: none;
@@ -57,11 +55,22 @@ h1, h2, h3 {
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
 }
+
 .button:hover {
-  background-color: #6F452D; /* darker brown on hover */
+  background-color: #6F452D;
 }
 
-/* 7) Card styling: semi-translucent white panels to stand out on brown background */
+/* “Clear” butonu için ayrı renk */
+.clear-button {
+  background-color: #eb984e;
+  margin-left: 8px;
+}
+
+.clear-button:hover {
+  background-color: #d17c2b;
+}
+
+/* 7) Kart (listing) stili */
 .card {
   background-color: white;
   border-radius: 8px;
@@ -75,25 +84,26 @@ h1, h2, h3 {
   color: #5D3A1A;
 }
 
-/* 8) Book icon: dark brown */
+/* 8) Kitap simgesi (varsa) */
 .book-icon {
-  fill: #5D3A1A;   /* for inline SVG */
-  color: #5D3A1A;  /* for font‐icon */
+  fill: #5D3A1A;
+  color: #5D3A1A;
   width: 1.5rem;
   height: 1.5rem;
 }
 
-/* 9) Links: dark brown, underline on hover */
+/* 9) Link stili */
 a {
   color: #5D3A1A;
   text-decoration: none;
 }
+
 a:hover {
   text-decoration: underline;
   color: #3B2715;
 }
 
-/* 10) Form container (used on listing creation page) */
+/* 10) Form konteyner (örneğin kitap ekleme sayfası için) */
 .form-container {
   width: 100%;
   max-width: 600px;
@@ -105,16 +115,17 @@ a:hover {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
-/* 10a) Form field wrapper */
 .form-field-wrapper {
   margin-bottom: 15px;
 }
+
 .form-field-wrapper label {
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
   color: #3B2F2F;
 }
+
 .form-field-wrapper input[type="text"],
 .form-field-wrapper input[type="number"],
 .form-field-wrapper select,
@@ -128,16 +139,19 @@ a:hover {
   background-color: #FFF9F1;
   color: #3B2F2F;
 }
+
 .form-field-wrapper textarea {
   min-height: 80px;
   resize: vertical;
 }
+
 .form-field-wrapper .help-text {
   display: block;
   font-size: 0.85em;
   color: #666;
   margin-top: 4px;
 }
+
 .form-field-wrapper .error-message {
   color: #D8000C;
   background-color: #FFD2D2;
@@ -148,7 +162,6 @@ a:hover {
   font-size: 0.9em;
 }
 
-/* 10b) Non-field form errors */
 .form-errors-non-field {
   color: #D8000C;
   background-color: #FFD2D2;
@@ -158,7 +171,6 @@ a:hover {
   border-radius: 4px;
 }
 
-/* 10c) Submit button (reuse .button but larger) */
 .submit-button {
   background-color: #8B5F3D;
   color: white;
@@ -169,42 +181,68 @@ a:hover {
   font-size: 1.1em;
   transition: background-color 0.2s ease-in-out;
 }
+
 .submit-button:hover {
   background-color: #6F452D;
 }
 
-/* 11) Cancel link styling */
+/* 11) İptal linki stili */
 .cancel-link {
   display: inline-block;
   margin-top: 15px;
   color: #5D3A1A;
   text-decoration: none;
 }
+
 .cancel-link:hover {
   text-decoration: underline;
 }
 
-/* 12) Navbar styling */
+/* 12) Navbar: .container içinde sol ve sağ bölümler hizalanacak */
 nav {
-  margin: 20px 0;
-  font-size: 1em;
-}
-nav a, nav span {
-  margin-right: 15px;
-  text-decoration: none;
-  color: #5D3A1A;
-}
-nav a:hover {
-  text-decoration: underline;
-  color: #3B2715;
+  background-color: transparent;
 }
 
-/* 13) Django messages styling */
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logout-button {
+  background-color: #8B5F3D;
+  color: #fff;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.logout-button:hover {
+  background-color: #6F452D;
+}
+
+.logout-form {
+  margin: 0;
+  padding: 0;
+  display: inline;
+}
+
+/* 13) Django messages */
 .messages {
   list-style-type: none;
   padding: 0;
   margin: 0 0 15px 0;
 }
+
 .messages li {
   padding: 10px 15px;
   margin-bottom: 10px;
@@ -212,12 +250,14 @@ nav a:hover {
   color: #fff;
   font-size: 0.95em;
 }
+
 .messages li.success { background-color: #28a745; }
 .messages li.error   { background-color: #dc3545; }
 .messages li.warning { background-color: #ffc107; color: #212529; }
 .messages li.info    { background-color: #17a2b8; }
 .messages li.debug   { background-color: #6c757d; }
 
+/* 14) Filtre formundaki arama alanının genişliği */
 .filter-form input[type="text"] {
-  width: 300px;  
+  width: 300px;
 }

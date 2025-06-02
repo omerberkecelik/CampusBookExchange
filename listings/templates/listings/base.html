@@ -1,61 +1,58 @@
-{# listings/templates/listings/base.html #}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{% block title %}Campus Book Exchange{% endblock %}</title>
-
   {% load static %}
-  <!-- Google Fonts -->
   <link
     href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Nunito:wght@300;400;600&display=swap"
     rel="stylesheet"
   />
-
-  <!-- Our main stylesheet -->
   <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-
   {% block page_styles %}{% endblock %}
 </head>
 <body>
 
-  <div class="container">
-    <nav>
-      <a href="{% url 'listings:home' %}">Home</a>
-      {% if user.is_authenticated %}
-        <span>Hi {{ user.username }}!</span>
-        <a href="{% url 'listings:create_listing' %}">List a Book</a>
-        <a href="{% url 'listings:suggest_book' %}">Suggest Book</a>
-        <a href="{% url 'listings:my_listings' %}">My Listings</a>
-        <a href="{% url 'listings:reports' %}">Reports</a>
-        <form class="logout-form" method="post" action="{% url 'logout' %}">
-          {% csrf_token %}
-          <button type="submit">Logout</button>
-        </form>
-      {% else %}
-        <a href="{% url 'login' %}">Login</a>
-        <a href="{% url 'listings:register' %}">Register</a>
-      {% endif %}
-    </nav>
+  <nav>
+    <div class="container nav-container">
+      <div class="nav-left">
+        <a href="{% url 'listings:home' %}">Home</a>
+      </div>
+      <div class="nav-right">
+        {% if user.is_authenticated %}
+          <span>Hi {{ user.username }}!</span>
+          <a href="{% url 'listings:create_listing' %}">List a Book</a>
+          <a href="{% url 'listings:suggest_book' %}">Suggest Book</a>
+          <a href="{% url 'listings:my_listings' %}">My Listings</a>
+          <a href="{% url 'listings:reports' %}">Reports</a>
+          <form class="logout-form" method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="logout-button">Logout</button>
+          </form>
+        {% else %}
+          <a href="{% url 'login' %}">Login</a>
+          <a href="{% url 'listings:register' %}">Register</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
 
-    <hr />
+  <hr />
 
-    {% if messages %}
-      <ul class="messages">
-        {% for message in messages %}
-          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
-            {{ message }}
-          </li>
-        {% endfor %}
-      </ul>
-    {% endif %}
+  {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+          {{ message }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
 
-    <main>
-      {% block content %}{% endblock %}
-    </main>
-  </div>
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
 
   <footer>
     <div class="container">
