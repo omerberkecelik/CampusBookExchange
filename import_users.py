@@ -1,4 +1,4 @@
-# import_users.py
+
 
 import csv
 from django.utils import timezone
@@ -13,7 +13,7 @@ def import_users_from_csv(csv_path, limit=1000):
     `limit` parametresi, kaç satır okunduğunu sınırlar.
     """
 
-    # Tüm kullanıcılar için tek bir şifre hash’i oluşturuyoruz.
+
     default_hash = make_password('DefaultpaSSword123')
 
     with open(csv_path, newline='', encoding='utf-8') as csvfile:
@@ -25,26 +25,22 @@ def import_users_from_csv(csv_path, limit=1000):
                 break
 
             try:
-                # CSV'den isim ve soyadı alıyoruz ve tümü küçük harfe çeviriyoruz
+                
                 first_name = row.get('First Name', '').strip()
                 last_name = row.get('Last Name', '').strip()
                 email = row.get('Email', '').strip()
 
-                # Eğer e-posta boşsa bu satırı atla
                 if not email:
                     continue
 
-                # Kullanıcı adı oluşturma: önce isim+soyisim (küçük harf), sonra sıra numarası
                 base_username = (first_name + last_name).lower()
                 username = base_username
 
-                # Eğer aynı username zaten varsa sonuna sayısal bir ek getir
                 suffix = 1
                 while User.objects.filter(username=username).exists():
                     username = f"{base_username}{suffix}"
                     suffix += 1
 
-                # Buradan itibaren kullanıcı oluşturuyoruz
                 user = User(
                     username=username,
                     first_name=first_name,
@@ -66,8 +62,5 @@ def import_users_from_csv(csv_path, limit=1000):
         print(f"\nToplam {count} kullanıcı eklendi: {csv_path} (limit={limit})")
 
 
-# Eğer bu dosyayı doğrudan çalıştırırsanız (python import_users.py),
-# aşağıdaki kodu devreye sokup örneğin 200 tane kullanıcı ekleyebilirsiniz.
 if __name__ == "__main__":
-    # limit buraya sabit olarak yazılabilir veya komut satırı argümanı ekleyerek dinamikleştirilebilir.
     import_users_from_csv("scripts/people-10000.csv", limit=200)

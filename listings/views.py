@@ -35,15 +35,15 @@ def home(request):
     List “Available” (AVL) listings and apply
     optional GET filters: search (q), condition, course.
     """
-    # 1) Read GET parameters
+
     query = request.GET.get('q', '').strip()
     condition_filter = request.GET.get('condition', '')
     course_filter = request.GET.get('course', '')
 
-    # 2) Only “Available” listings
+
     available_listings = Listing.objects.filter(status='AVL').select_related('book', 'student')
 
-    # 3) Search by title, author, ISBN
+    # Search by title, author, ISBN
     if query:
         available_listings = available_listings.filter(
             Q(book__title__icontains=query) |
@@ -51,17 +51,17 @@ def home(request):
             Q(book__isbn__icontains=query)
         )
 
-    # 4) Filter by condition if provided
+    # Filter by condition if provided
     if condition_filter:
         available_listings = available_listings.filter(condition=condition_filter)
 
-    # 5) Filter by course if provided
+    # Filter by course if provided
     if course_filter:
         available_listings = available_listings.filter(
             book__course_assignments__course__pk=course_filter
         )
 
-    # 6) Pass all condition choices and all courses to the template
+    # Pass all condition choices and all courses to the template
     all_conditions = Listing.CONDITION_CHOICES
     all_courses = Course.objects.order_by('course_code')
 
@@ -161,20 +161,20 @@ def manage_offers(request, pk):
         offer = get_object_or_404(Offer, pk=offer_id, listing=listing)
 
         if action == 'accept':
-            # Accept the offer
+
             offer.status = 'ACC'
             offer.save()
-            # Mark the listing as “SOLD”
+
             listing.status = 'SOLD'
             listing.save()
-            # Reject all other pending offers
+
             Offer.objects.filter(listing=listing).exclude(pk=offer.pk).update(status='REJ')
             messages.success(
                 request,
                 f"Accepted ${offer.offer_price} from {offer.buyer.username}. Listing marked as sold."
             )
         elif action == 'reject':
-            # Reject the offer
+
             offer.status = 'REJ'
             offer.save()
             messages.info(request, f"Rejected ${offer.offer_price} from {offer.buyer.username}.")
@@ -266,11 +266,11 @@ def accept_offer(request, pk):
     offer = get_object_or_404(Offer, pk=pk)
     listing = offer.listing
 
-    # Only the listing owner can accept/reject
+
     if listing.student != request.user:
         return HttpResponseForbidden("You are not allowed to accept this offer.")
 
-    # If already processed, do nothing
+
     if offer.status != 'PEN':
         messages.warning(request, 'This offer has already been processed.')
         return redirect('listings:manage_offers', pk=listing.pk)
@@ -281,7 +281,7 @@ def accept_offer(request, pk):
     listing.status = 'SOLD'
     listing.save()
 
-    # Optionally reject all other pending offers
+
     other_offers = listing.offers.filter(status='PEN').exclude(pk=offer.pk)
     for o in other_offers:
         o.status = 'REJ'
