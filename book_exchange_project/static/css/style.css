@@ -47,7 +47,7 @@ h1, h2, h3 {
 
 /* 6) Düğmeler */
 .button {
-  background-color: #8B5F3D;
+  background-color: #8B5F3D;  /* koyu kahverengi */
   color: #fff;
   padding: 8px 16px;
   border: none;
@@ -60,14 +60,21 @@ h1, h2, h3 {
   background-color: #6F452D;
 }
 
-/* “Clear” butonu için ayrı renk */
+/* 6a) “Clear” butonu da .button ile aynı renk kullanacak */
+/*     Dolayısıyla clear-button sınıfı için ORANGE stillerini kaldırıyoruz. */
 .clear-button {
-  background-color: #eb984e;
-  margin-left: 8px;
+  background-color: #8B5F3D;  /* tam olarak .button arkaplanıyla aynı */
+  margin-left: 8px;           /* Filter ve Clear arasında yatay boşluk */
+  color: #fff;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
 }
 
 .clear-button:hover {
-  background-color: #d17c2b;
+  background-color: #6F452D;
 }
 
 /* 7) Kart (listing) stili */
@@ -257,7 +264,40 @@ nav {
 .messages li.info    { background-color: #17a2b8; }
 .messages li.debug   { background-color: #6c757d; }
 
-/* 14) Filtre formundaki arama alanının genişliği */
-.filter-form input[type="text"] {
+/* 14) Filtre formu satırı: yatayda butonlar yan yana, dikey aralık var */
+.filter-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+/* 15) Arama kutusunu biraz daha geniş yapalım */
+.filter-form .search-field {
   width: 300px;
+  min-width: 200px;
+}
+
+/* 16) İkinci select’in minimum genişliği */
+.filter-form select {
+  min-width: 150px;
+}
+
+/* 17) Herhangi bir input’un kendi margin-top’u yok; 
+       butonların alt sıraya düşmesi durumunda arada boşluk kalsın */
+.filter-form .button {
+  margin-top: 8px;
+}
+
+/* ============================================================
+   18) LOGIN SAYFASI İÇİN “Username” <input> UZUNLUĞUNU KISALTMAK 
+   ============================================================
+   - Django'nun built‐in login form’u, fields'ı bir <table> içinde çıkarıyor.
+   - Burada input[name="username"] seçicisiyle sadece login sayfasındaki 
+     “Username” alanına özel bir genişlik belirliyoruz.  
+*/
+.login-form input[name="username"],
+.login-form input[name="password"] {
+  width: 200px; /* İstediğiniz sabit genişlik */
 }

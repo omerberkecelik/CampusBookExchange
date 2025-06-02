@@ -42,7 +42,11 @@
         </option>
       {% endfor %}
     </select>
+
+    <!-- “Filter” button -->
     <button class="button" type="submit">Filter</button>
+
+    <!-- “Clear” button (only appears if there is some query, condition, or course selected) -->
     {% if query or selected_condition or selected_course %}
       <a href="{% url 'listings:home' %}" class="button clear-button">Clear</a>
     {% endif %}
