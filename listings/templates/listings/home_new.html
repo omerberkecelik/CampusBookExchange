@@ -1,0 +1,553 @@
+{% extends "listings/base.html" %}
+{% load static %}
+
+{% block title %}Campus Book Exchange{% endblock %}
+
+{% block page_styles %}
+<style>
+/* Apple-style hero section */
+.hero-section {
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background-image: url('{% static "images/a.png" %}');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #3B2715;
+  text-align: center;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+}
+
+.hero-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 2;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 3;
+  max-width: 1200px;
+  padding: 0 80px;
+  animation: fadeInUp 1s ease-out;
+  margin: 0 auto;
+}
+
+.hero-title {
+  font-size: 4rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  line-height: 1.1;
+  opacity: 0;
+  animation: fadeInUp 1s ease-out 0.3s forwards;
+  color: #3B2715;
+  text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8);
+}
+
+.hero-subtitle {
+  font-size: 1.5rem;
+  font-weight: 300;
+  margin-bottom: 2rem;
+  opacity: 0;
+  animation: fadeInUp 1s ease-out 0.6s forwards;
+  color: #3B2715;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.hero-cta {
+  opacity: 0;
+  animation: fadeInUp 1s ease-out 0.9s forwards;
+}
+
+.cta-button {
+  display: inline-block;
+  padding: 15px 30px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+  text-decoration: none;
+  border-radius: 30px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  margin: 0 10px;
+}
+
+.cta-button:hover {
+  background: white;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.scroll-indicator {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #3B2715;
+  animation: bounce 2s infinite;
+  z-index: 3;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+/* Main content section */
+.main-content {
+  background: #F5E1C0;
+  min-height: 100vh;
+  padding: 80px 0;
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  margin: 0;
+}
+
+.main-content .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 80px;
+  width: calc(100% - 160px);
+}
+
+.welcome-section {
+  text-align: center;
+  padding: 100px 0;
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 0.8s ease;
+}
+
+.welcome-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.welcome-title {
+  font-size: 3rem;
+  color: #5D3A1A;
+  margin-bottom: 2rem;
+  font-family: 'Merriweather', serif;
+}
+
+.welcome-description {
+  font-size: 1.2rem;
+  color: #3B2F2F;
+  max-width: 800px;
+  margin: 0 auto 3rem;
+  line-height: 1.6;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 40px;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.feature-card {
+  background: white;
+  padding: 40px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  opacity: 0;
+  transform: translateY(50px);
+}
+
+.feature-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.feature-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.feature-title {
+  font-size: 1.5rem;
+  color: #5D3A1A;
+  margin-bottom: 1rem;
+  font-family: 'Merriweather', serif;
+}
+
+.feature-description {
+  color: #666;
+  line-height: 1.5;
+}
+
+/* Search section styling */
+.search-section {
+  background: white;
+  padding: 80px 40px;
+  margin: 60px 80px;
+  border-radius: 20px;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+  max-width: calc(1100px - 160px);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Make search form inputs side by side */
+.search-section .filter-form {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 15px !important;
+  margin-bottom: 0 !important;
+}
+
+.search-section .filter-form .input {
+  flex: 1 !important;
+  min-width: 200px !important;
+  max-width: 280px !important;
+  margin-right: 0 !important;
+}
+
+.search-section .filter-form .search-field {
+  flex: 2 !important;
+  min-width: 300px !important;
+  max-width: 400px !important;
+}
+
+.search-section .filter-form .button {
+  flex: none !important;
+  margin-top: 0 !important;
+  padding: 8px 25px !important;
+  white-space: nowrap !important;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  40% {
+    transform: translateX(-50%) translateY(-10px);
+  }
+  60% {
+    transform: translateX(-50%) translateY(-5px);
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2.5rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.2rem;
+  }
+  
+  .welcome-title {
+    font-size: 2rem;
+  }
+  
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<style>
+  /* Override container for home page */
+  .container {
+    margin: 0 !important;
+    margin-top: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+  }
+  
+  /* Force navigation styling */
+  nav {
+    background-color: #3B2715 !important;
+    width: 100vw !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  nav .nav-container {
+    margin: 0 auto !important;
+    max-width: 1200px !important;
+    width: calc(100% - 160px) !important;
+    padding: 15px 80px !important;
+  }
+  
+  nav a {
+    text-transform: uppercase !important;
+    color: white !important;
+    font-weight: bold !important;
+  }
+  
+  /* Add side margins to results section */
+  .results-section {
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+    padding: 0 80px !important;
+  }
+  
+  .results-section h2 {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  
+  /* Shorten white book listing boxes */
+  .results-section .card {
+    margin: 0 40px 20px 40px !important;
+    max-width: calc(100% - 80px) !important;
+  }
+  
+  /* No results section margins */
+  .no-results-section {
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+    padding: 60px 80px !important;
+  }
+  
+  /* Fix footer margins on home page */
+  footer .container {
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+    padding: 20px 80px !important;
+    width: auto !important;
+  }
+</style>
+
+<section class="hero-section" id="hero">
+  
+  <div class="hero-overlay"></div>
+  
+  <div class="hero-content">
+    <h1 class="hero-title">Campus Book Exchange</h1>
+    <p class="hero-subtitle">Where students trade knowledge, one book at a time</p>
+    <div class="hero-cta">
+      {% if user.is_authenticated %}
+        <a href="#search" class="cta-button">Browse Books</a>
+        <a href="{% url 'listings:create_listing' %}" class="cta-button">List Your Book</a>
+      {% else %}
+        <a href="{% url 'listings:register' %}" class="cta-button">Get Started</a>
+        <a href="#search" class="cta-button">Browse Books</a>
+      {% endif %}
+    </div>
+  </div>
+  
+  <div class="scroll-indicator">
+    <div style="font-size: 1.2rem; margin-bottom: 10px;">Scroll to explore</div>
+    <div style="font-size: 2rem;">↓</div>
+  </div>
+</section>
+
+<div class="main-content">
+  <div class="container">
+    
+    <section class="welcome-section" id="welcome">
+      <h2 class="welcome-title">Welcome to Campus Book Exchange</h2>
+      <p class="welcome-description">
+        Connect with fellow students to buy, sell, and trade textbooks.<br>
+        Save money on your academic materials while helping others in your campus community.
+      </p>
+      
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">📚</div>
+          <h3 class="feature-title">Browse Books</h3>
+          <p class="feature-description">
+            Search through hundreds of textbooks from various courses and find exactly what you need for your studies.
+          </p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">💰</div>
+          <h3 class="feature-title">Save Money</h3>
+          <p class="feature-description">
+            Get textbooks at student-friendly prices. Trade or buy used books and save significantly on your semester expenses.
+          </p>
+        </div>
+        
+      </div>
+    </section>
+
+    <section class="search-section" id="search">
+      <h2 style="text-align: center; color: #5D3A1A; margin-bottom: 40px; font-family: 'Merriweather', serif;">Find Your Next Textbook</h2>
+      
+      <form method="get" class="filter-form">
+        <input
+          class="input search-field"
+          type="text"
+          name="q"
+          placeholder="Search by title, author, or ISBN"
+          value="{{ query }}"
+        />
+        <select class="input" name="condition">
+          <option value="">All Conditions</option>
+          {% for code,label in all_conditions %}
+            <option value="{{ code }}" {% if selected_condition == code %}selected{% endif %}>
+              {{ label }}
+            </option>
+          {% endfor %}
+        </select>
+        <select class="input" name="course">
+          <option value="">All Courses</option>
+          {% for course in all_courses %}
+            <option
+              value="{{ course.pk }}"
+              {% if selected_course|stringformat:"s" == course.pk|stringformat:"s" %}selected{% endif %}
+            >
+              {{ course.course_code }} – {{ course.course_name }}
+            </option>
+          {% endfor %}
+        </select>
+
+        <button class="button" type="submit">Search</button>
+
+        {% if query or selected_condition or selected_course %}
+          <a href="{% url 'listings:home' %}" class="button clear-button">Clear</a>
+        {% endif %}
+      </form>
+    </section>
+
+    {% if listings %}
+      <section class="results-section">
+        <h2 style="color: #5D3A1A; margin-bottom: 30px; font-family: 'Merriweather', serif;">Available Books</h2>
+        {% for listing in listings %}
+          <div class="card">
+            <h2>
+              <a href="{% url 'listings:listing_detail' listing.pk %}">
+                {{ listing.book.title }}
+              </a>
+            </h2>
+            <p>
+              <strong>Author:</strong> {{ listing.book.author }}
+              &nbsp;|&nbsp;
+              <strong>Condition:</strong> {{ listing.get_condition_display }}
+              {% if listing.price %}
+                &nbsp;|&nbsp; <strong>Price:</strong> ${{ listing.price }}
+              {% else %}
+                &nbsp;|&nbsp; <strong>Price:</strong> Trade only
+              {% endif %}
+            </p>
+            <p>
+              <strong>Seller:</strong> {{ listing.student.username }}
+              {% if listing.student.profile.major %}
+                &nbsp;|&nbsp; <strong>Major:</strong> {{ listing.student.profile.major }}
+              {% endif %}
+            </p>
+            <p><strong>Date Listed:</strong> {{ listing.date_listed|date:"F d, Y" }}</p>
+            {% if listing.description %}
+              <p><strong>Description:</strong> {{ listing.description }}</p>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </section>
+    {% else %}
+      <section class="no-results-section" style="text-align: center; padding: 60px 0;">
+        <h3 style="color: #5D3A1A; margin-bottom: 20px;">No books found</h3>
+        <p style="margin-bottom: 30px;">Be the first to list a book or try adjusting your search filters.</p>
+        {% if user.is_authenticated %}
+          <a href="{% url 'listings:create_listing' %}" class="button">List Your Book Now!</a>
+        {% else %}
+          <a href="{% url 'listings:register' %}" class="button">Register</a>
+          <span style="margin: 0 10px;">or</span>
+          <a href="{% url 'login' %}" class="button">Login</a>
+        {% endif %}
+      </section>
+    {% endif %}
+    
+  </div>
+</div>
+
+<script>
+// Smooth scrolling for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  });
+});
+
+// Intersection Observer for scroll animations
+const observerOptions = {
+  threshold: 0.1,
+  rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, observerOptions);
+
+// Observe elements for animation
+document.addEventListener('DOMContentLoaded', () => {
+  const elementsToObserve = document.querySelectorAll('.welcome-section, .feature-card');
+  elementsToObserve.forEach(el => observer.observe(el));
+  
+  // Stagger animation for feature cards
+  const featureCards = document.querySelectorAll('.feature-card');
+  featureCards.forEach((card, index) => {
+    card.style.transitionDelay = `${index * 0.2}s`;
+  });
+});
+
+// Parallax effect for hero background (if image is added)
+window.addEventListener('scroll', () => {
+  const scrolled = window.pageYOffset;
+  const heroBackground = document.querySelector('.hero-background');
+  if (heroBackground) {
+    heroBackground.style.transform = `translateY(${scrolled * 0.5}px)`;
+  }
+});
+</script>
+{% endblock %}

@@ -1,13 +1,45 @@
-{# listings/templates/registration/register.html #}
-{% extends "listings/base.html" %} {# We'll create base.html soon #}
+
+{% extends "listings/base.html" %} 
 
 {% block title %}Sign Up{% endblock %}
+
+{% block page_styles %}
+<style>
+  /* Force navigation styling */
+  nav {
+    background-color: #3B2715 !important;
+    width: 100vw !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  nav .nav-container {
+    margin: 0 auto !important;
+    max-width: 1200px !important;
+    width: calc(100% - 160px) !important;
+    padding: 15px 80px !important;
+  }
+  
+  nav a {
+    text-transform: uppercase !important;
+    color: white !important;
+    font-weight: bold !important;
+  }
+  
+  /* Add side margins to content */
+  .container {
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+    padding: 20px 80px !important;
+  }
+</style>
+{% endblock %}
 
 {% block content %}
   <h2>Sign Up</h2>
   <form method="post">
     {% csrf_token %}
-    {{ form.as_p }} {# Renders the form fields as paragraphs #}
+    {{ form.as_p }} 
     <button type="submit">Sign Up</button>
   </form>
   <p><a href="{% url 'login' %}">Already have an account? Login</a></p>

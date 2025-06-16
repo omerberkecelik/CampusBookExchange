@@ -1,28 +1,39 @@
-/* 1) Genel stil ve sayfa arka planı */
+
 body {
   font-family: 'Nunito', sans-serif;
   background-color: #F5E1C0;
   color: #3B2F2F;
   margin: 0;
   padding: 0;
+  scroll-behavior: smooth;
+  width: 100%;
+  overflow-x: hidden;
 }
 
-/* 2) Başlık fontu */
 h1, h2, h3 {
   font-family: 'Merriweather', serif;
   color: #5D3A1A;
   margin-top: 0;
 }
 
-/* 3) .container: Kenarlardan boşluk bırakır, içerikleri ortalar */
 .container {
-  width: 90%;
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 20px 80px;
 }
 
-/* 4) Hero bölümü */
+.results-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 80px;
+}
+
+.no-results-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 80px;
+}
+
 .hero {
   text-align: center;
   margin-bottom: 30px;
@@ -34,7 +45,6 @@ h1, h2, h3 {
   margin-bottom: 20px;
 }
 
-/* 5) Giriş alanları (arama, filtre) */
 .input {
   padding: 8px 12px;
   font-size: 1em;
@@ -45,9 +55,8 @@ h1, h2, h3 {
   color: #3B2F2F;
 }
 
-/* 6) Düğmeler */
 .button {
-  background-color: #8B5F3D;  /* koyu kahverengi */
+  background-color: #8B5F3D;  
   color: #fff;
   padding: 8px 16px;
   border: none;
@@ -60,11 +69,9 @@ h1, h2, h3 {
   background-color: #6F452D;
 }
 
-/* 6a) “Clear” butonu da .button ile aynı renk kullanacak */
-/*     Dolayısıyla clear-button sınıfı için ORANGE stillerini kaldırıyoruz. */
 .clear-button {
-  background-color: #8B5F3D;  /* tam olarak .button arkaplanıyla aynı */
-  margin-left: 8px;           /* Filter ve Clear arasında yatay boşluk */
+  background-color: #8B5F3D;  
+  margin-left: 8px;           
   color: #fff;
   padding: 8px 16px;
   border: none;
@@ -77,13 +84,13 @@ h1, h2, h3 {
   background-color: #6F452D;
 }
 
-/* 7) Kart (listing) stili */
 .card {
   background-color: white;
   border-radius: 8px;
   padding: 16px;
-  margin-bottom: 20px;
+  margin: 0 40px 20px 40px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.10);
+  max-width: calc(100% - 80px);
 }
 
 .card h2 {
@@ -91,7 +98,6 @@ h1, h2, h3 {
   color: #5D3A1A;
 }
 
-/* 8) Kitap simgesi (varsa) */
 .book-icon {
   fill: #5D3A1A;
   color: #5D3A1A;
@@ -99,7 +105,6 @@ h1, h2, h3 {
   height: 1.5rem;
 }
 
-/* 9) Link stili */
 a {
   color: #5D3A1A;
   text-decoration: none;
@@ -110,7 +115,6 @@ a:hover {
   color: #3B2715;
 }
 
-/* 10) Form konteyner (örneğin kitap ekleme sayfası için) */
 .form-container {
   width: 100%;
   max-width: 600px;
@@ -135,6 +139,8 @@ a:hover {
 
 .form-field-wrapper input[type="text"],
 .form-field-wrapper input[type="number"],
+.form-field-wrapper input[type="password"],
+.form-field-wrapper input[type="email"],
 .form-field-wrapper select,
 .form-field-wrapper textarea {
   width: 100%;
@@ -193,7 +199,6 @@ a:hover {
   background-color: #6F452D;
 }
 
-/* 11) İptal linki stili */
 .cancel-link {
   display: inline-block;
   margin-top: 15px;
@@ -205,15 +210,42 @@ a:hover {
   text-decoration: underline;
 }
 
-/* 12) Navbar: .container içinde sol ve sağ bölümler hizalanacak */
 nav {
-  background-color: transparent;
+  background-color: #3B2715;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100vw;
+  z-index: 1000;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+  margin: 0;
+  padding: 0;
 }
 
 .nav-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 15px;
+  margin: 0 auto;
+  max-width: 1200px;
+  width: calc(100% - 160px);
+  box-sizing: border-box;
+}
+
+.nav-left a {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white !important;
+  text-decoration: none;
+  text-transform: uppercase !important;
+  letter-spacing: 1px;
+}
+
+.nav-left a:hover {
+  color: #F5E1C0;
 }
 
 .nav-right {
@@ -222,19 +254,114 @@ nav {
   gap: 1rem;
 }
 
+.nav-right a {
+  color: white !important;
+  text-decoration: none;
+  font-weight: 500;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px;
+}
+
+.nav-right a:hover {
+  color: #F5E1C0;
+  text-decoration: underline;
+}
+
+.nav-right span {
+  color: white;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 .logout-button {
   background-color: #8B5F3D;
-  color: #fff;
+  color: white;
   padding: 6px 12px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.95rem;
   transition: background-color 0.2s ease-in-out;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px;
+  font-weight: bold;
 }
 
 .logout-button:hover {
   background-color: #6F452D;
+}
+
+/* Force uppercase for all navigation links */
+nav a, 
+nav .nav-left a, 
+nav .nav-right a {
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  color: white !important;
+}
+
+nav .nav-left a {
+  letter-spacing: 1px !important;
+}
+
+/* Footer styling with consistent margins */
+footer {
+  background-color: #F5E1C0;
+  padding: 20px 0;
+  margin-top: 40px;
+}
+
+footer .container {
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+  padding: 0 80px !important;
+}
+
+footer p {
+  margin: 0;
+  color: #5D3A1A;
+  font-size: 0.9rem;
+}
+
+/* Ensure navigation styling is consistent across all pages */
+nav {
+  background-color: #3B2715 !important;
+  width: 100vw !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+nav .nav-container {
+  margin: 0 auto !important;
+  max-width: 1200px !important;
+  width: calc(100% - 160px) !important;
+  padding: 15px 80px !important;
+}
+
+/* Ensure logout button is always uppercase across all pages */
+button[type="submit"].logout-button,
+.logout-button,
+nav .logout-button,
+.nav-right .logout-button,
+.logout-form button,
+.logout-form .logout-button,
+form.logout-form button[type="submit"] {
+  text-transform: uppercase !important;
+  font-weight: bold !important;
+  letter-spacing: 0.5px !important;
+  color: white !important;
+  background-color: #8B5F3D !important;
+}
+
+/* Universal logout button styling - catches all variations */
+button:contains("Logout"),
+button:contains("logout"),
+*[class*="logout"] button,
+nav button[type="submit"],
+.nav-right button {
+  text-transform: uppercase !important;
+  font-weight: bold !important;
 }
 
 .logout-form {
@@ -243,7 +370,6 @@ nav {
   display: inline;
 }
 
-/* 13) Django messages */
 .messages {
   list-style-type: none;
   padding: 0;
@@ -264,7 +390,6 @@ nav {
 .messages li.info    { background-color: #17a2b8; }
 .messages li.debug   { background-color: #6c757d; }
 
-/* 14) Filtre formu satırı: yatayda butonlar yan yana, dikey aralık var */
 .filter-form {
   display: flex;
   flex-wrap: wrap;
@@ -273,31 +398,37 @@ nav {
   margin-bottom: 20px;
 }
 
-/* 15) Arama kutusunu biraz daha geniş yapalım */
 .filter-form .search-field {
   width: 300px;
   min-width: 200px;
 }
 
-/* 16) İkinci select’in minimum genişliği */
 .filter-form select {
   min-width: 150px;
 }
 
-/* 17) Herhangi bir input’un kendi margin-top’u yok; 
-       butonların alt sıraya düşmesi durumunda arada boşluk kalsın */
 .filter-form .button {
   margin-top: 8px;
 }
 
-/* ============================================================
-   18) LOGIN SAYFASI İÇİN “Username” <input> UZUNLUĞUNU KISALTMAK 
-   ============================================================
-   - Django'nun built‐in login form’u, fields'ı bir <table> içinde çıkarıyor.
-   - Burada input[name="username"] seçicisiyle sadece login sayfasındaki 
-     “Username” alanına özel bir genişlik belirliyoruz.  
-*/
-.login-form input[name="username"],
-.login-form input[name="password"] {
-  width: 200px; /* İstediğiniz sabit genişlik */
+.login-form .form-field-wrapper {
+  margin-bottom: 15px;
+}
+
+.login-form .form-field-wrapper input,
+.login-form input[type="text"],
+.login-form input[type="password"],
+.login-form input#id_username,
+.login-form input#id_password {
+  width: 100% !important;
+  max-width: 300px !important;
+  box-sizing: border-box;
+  padding: 10px;
+  border: 1px solid #A6896C;
+  border-radius: 4px;
+  background-color: #FFF9F1;
+  color: #3B2F2F;
+  font-size: 1em;
+  display: block;
+  margin: 0;
 }

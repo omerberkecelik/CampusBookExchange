@@ -1,10 +1,41 @@
 {% extends "listings/base.html" %}
 {% block title %}Project Reports (Raw SQL){% endblock %}
 
+{% block page_styles %}
+<style>
+  /* Force navigation styling */
+  nav {
+    background-color: #3B2715 !important;
+    width: 100vw !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  nav .nav-container {
+    margin: 0 auto !important;
+    max-width: 1200px !important;
+    width: calc(100% - 160px) !important;
+    padding: 15px 80px !important;
+  }
+  
+  nav a {
+    text-transform: uppercase !important;
+    color: white !important;
+    font-weight: bold !important;
+  }
+  
+  /* Add side margins to content */
+  .container {
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+    padding: 20px 80px !important;
+  }
+</style>
+{% endblock %}
+
 {% block content %}
   <h1>Project Reports</h1>
 
-  <!-- 1) Listing with Most Offers -->
   <section style="margin-bottom: 40px;">
     <h2>1) Listing with Most Offers</h2>
     {% if top_listing_raw %}
@@ -20,7 +51,6 @@
 
   <hr>
 
-  <!-- 2) Number of Listings per Course -->
   <section style="margin-bottom: 40px;">
     <h2>2) Number of Listings per Course</h2>
     {% if courses_data_raw %}
@@ -49,7 +79,6 @@
 
   <hr>
 
-  <!-- 3) Listings Created in the Last 7 Days -->
   <section style="margin-bottom: 40px;">
     <h2>3) Listings Created in the Last 7 Days</h2>
     <p>

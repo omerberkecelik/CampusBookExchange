@@ -1,6 +1,38 @@
 {% extends "listings/base.html" %}
 {% block title %}My Listings{% endblock %}
 
+{% block page_styles %}
+<style>
+  /* Force navigation styling */
+  nav {
+    background-color: #3B2715 !important;
+    width: 100vw !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  nav .nav-container {
+    margin: 0 auto !important;
+    max-width: 1200px !important;
+    width: calc(100% - 160px) !important;
+    padding: 15px 80px !important;
+  }
+  
+  nav a {
+    text-transform: uppercase !important;
+    color: white !important;
+    font-weight: bold !important;
+  }
+  
+  /* Add side margins to content */
+  .container {
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+    padding: 20px 80px !important;
+  }
+</style>
+{% endblock %}
+
 {% block content %}
   <h1>My Listings</h1>
   {% if listings %}

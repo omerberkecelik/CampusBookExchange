@@ -1,7 +1,61 @@
-{# templates/registration/login.html #}
+
 {% extends "listings/base.html" %}
 
 {% block title %}Login{% endblock %}
+
+{% block page_styles %}
+<style>
+  /* Force navigation styling */
+  nav {
+    background-color: #3B2715 !important;
+    width: 100vw !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  nav .nav-container {
+    margin: 0 auto !important;
+    max-width: 1200px !important;
+    width: calc(100% - 160px) !important;
+    padding: 15px 80px !important;
+  }
+  
+  nav a {
+    text-transform: uppercase !important;
+    color: white !important;
+    font-weight: bold !important;
+  }
+  
+  /* Add side margins to content */
+  .container {
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+    padding: 20px 80px !important;
+  }
+  
+  /* Fix login form input sizes */
+  .login-form input[type="text"],
+  .login-form input[type="password"],
+  .login-form input#id_username,
+  .login-form input#id_password,
+  .form-field-wrapper input[type="text"],
+  .form-field-wrapper input[type="password"] {
+    width: 100% !important;
+    max-width: 350px !important;
+    min-width: 350px !important;
+    box-sizing: border-box !important;
+    padding: 12px !important;
+    border: 1px solid #A6896C !important;
+    border-radius: 4px !important;
+    background-color: #FFF9F1 !important;
+    color: #3B2F2F !important;
+    font-size: 16px !important;
+    height: 45px !important;
+    display: block !important;
+    margin: 0 !important;
+  }
+</style>
+{% endblock %}
 
 {% block content %}
   <h1 style="margin-bottom: 20px;">Login</h1>
@@ -48,7 +102,6 @@
       {% endif %}
     </div>
 
-    {# Preserve “next” field if Django provided it #}
     <input type="hidden" name="next" value="{{ next }}">
 
     <button type="submit" class="button">Login</button>

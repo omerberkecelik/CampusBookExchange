@@ -1,7 +1,54 @@
-{# listings/templates/listings/suggest_book.html #}
+
 {% extends 'listings/base.html' %}
 
 {% block title %}Suggest a New Book{% endblock %}
+
+{% block page_styles %}
+<style>
+  /* Force navigation styling */
+  nav {
+    background-color: #3B2715 !important;
+    width: 100vw !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  nav .nav-container {
+    margin: 0 auto !important;
+    max-width: 1200px !important;
+    width: calc(100% - 160px) !important;
+    padding: 15px 80px !important;
+  }
+  
+  nav a {
+    text-transform: uppercase !important;
+    color: white !important;
+    font-weight: bold !important;
+  }
+  
+  /* Add side margins to content */
+  .container {
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+    padding: 20px 80px !important;
+  }
+  
+  /* Style the submit button to match site colors */
+  button[type="submit"] {
+    background-color: #8B5F3D !important;
+    color: white !important;
+    padding: 8px 15px !important;
+    border: none !important;
+    border-radius: 4px !important;
+    cursor: pointer !important;
+    transition: background-color 0.2s ease-in-out !important;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #6F452D !important;
+  }
+</style>
+{% endblock %}
 
 {% block content %}
   <h1>Suggest a New Book</h1>

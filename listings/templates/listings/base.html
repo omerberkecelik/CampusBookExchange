@@ -15,7 +15,7 @@
 <body>
 
   <nav>
-    <div class="container nav-container">
+    <div class="nav-container">
       <div class="nav-left">
         <a href="{% url 'listings:home' %}">Home</a>
       </div>
@@ -28,7 +28,7 @@
           <a href="{% url 'listings:reports' %}">Reports</a>
           <form class="logout-form" method="post" action="{% url 'logout' %}">
             {% csrf_token %}
-            <button type="submit" class="logout-button">Logout</button>
+            <button type="submit" class="logout-button" style="text-transform: uppercase !important; font-weight: bold !important;">Logout</button>
           </form>
         {% else %}
           <a href="{% url 'login' %}">Login</a>
@@ -37,8 +37,6 @@
       </div>
     </div>
   </nav>
-
-  <hr />
 
   {% if messages %}
     <ul class="messages">
@@ -50,7 +48,7 @@
     </ul>
   {% endif %}
 
-  <main class="container">
+  <main class="container" style="margin-top: 80px;">
     {% block content %}{% endblock %}
   </main>
 

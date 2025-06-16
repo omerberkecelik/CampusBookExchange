@@ -1,20 +1,13 @@
-# listings/models.py
-
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils import timezone
-
-# 1. Profile Model (extends User with student-specific info)
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from django.db.models import QuerySet
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     major = models.CharField(max_length=100, blank=True, null=True)
-    # User.date_joined zaten kayıt tarihi için kullanılıyor
-
     def __str__(self):
         return f"{self.user.username}'s Profile"
-
-
-# 2. Book Model
 class Book(models.Model):
     isbn = models.CharField(
         max_length=13,
@@ -30,12 +23,8 @@ class Book(models.Model):
         null=True,
         help_text="Year of publication"
     )
-
     def __str__(self):
         return f"{self.title} (ISBN: {self.isbn})"
-
-
-# 3. Course Model
 class Course(models.Model):
     course_code = models.CharField(
         max_length=20,
@@ -44,12 +33,8 @@ class Course(models.Model):
     )
     course_name = models.CharField(max_length=150)
     department = models.CharField(max_length=100, blank=True, null=True)
-
     def __str__(self):
         return f"{self.course_code} - {self.course_name}"
-
-
-# 4. Listing Model
 class Listing(models.Model):
     CONDITION_CHOICES = [
         ('NEW', 'New'),
@@ -65,7 +50,8 @@ class Listing(models.Model):
         ('TRD', 'Traded'),
         ('REM', 'Removed'),
     ]
-
+    if TYPE_CHECKING:
+        offers: 'QuerySet[Offer]'
     student = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -91,15 +77,13 @@ class Listing(models.Model):
     )
     date_listed = models.DateTimeField(auto_now_add=True)
     description = models.TextField(blank=True, null=True)
-
     def __str__(self):
         return f"Listing for '{self.book.title}' by {self.student.username} ({self.get_status_display()})"
-
+    
+    def get_status_display(self):
+        return dict(self.STATUS_CHOICES).get(self.status, self.status)
     class Meta:
         ordering = ['-date_listed']
-
-
-# 5. BookCourseAssignment Model
 class BookCourseAssignment(models.Model):
     book = models.ForeignKey(
         Book,
@@ -115,17 +99,12 @@ class BookCourseAssignment(models.Model):
         default=True,
         help_text="Is this book required or recommended for the course?"
     )
-
     def __str__(self):
         return f"'{self.book.title}' for '{self.course.course_code}' (Required: {self.is_required})"
-
     class Meta:
         unique_together = ('book', 'course')
         verbose_name = "Book-Course Assignment"
         verbose_name_plural = "Book-Course Assignments"
-
-
-# 6. Offer Model (users can make offers on Listings)
 class Offer(models.Model):
     listing = models.ForeignKey(
         Listing,
@@ -145,12 +124,11 @@ class Offer(models.Model):
     ]
     status = models.CharField(max_length=3, choices=STATUS_CHOICES, default='PEN')
     created_at = models.DateTimeField(auto_now_add=True)
-
     def __str__(self):
         return f"{self.buyer.username} offers ${self.offer_price} on {self.listing.book.title}"
-
-
-# 7. BookSuggestion Model (students can suggest new books)
+    
+    def get_status_display(self):
+        return dict(self.STATUS_CHOICES).get(self.status, self.status)
 class BookSuggestion(models.Model):
     title = models.CharField(max_length=255)
     author = models.CharField(max_length=255, blank=True, null=True)
@@ -162,6 +140,5 @@ class BookSuggestion(models.Model):
     )
     timestamp = models.DateTimeField(auto_now_add=True)
     is_approved = models.BooleanField(default=False)
-
     def __str__(self):
         return f"{self.title} suggested by {self.suggested_by.username}"
