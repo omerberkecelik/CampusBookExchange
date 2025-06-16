@@ -290,7 +290,7 @@ def generate_book_suggestions(users, count=30):
 
 def main():
     """Main function to generate all realistic data"""
-    print("🎭 Generating realistic data using Faker...")
+    print("Generating realistic data using Faker...")
     print("=" * 50)
     
     # Clear existing data
@@ -309,13 +309,13 @@ def main():
     suggestions = generate_book_suggestions(users, 30)
     
     print("\n" + "=" * 50)
-    print("✅ Realistic data generation complete!")
-    print(f"📊 Summary:")
-    print(f"   👥 Users: {len(users)}")
-    print(f"   📚 Listings: {len(listings)}")
-    print(f"   💰 Offers: {len(offers)}")
-    print(f"   💡 Suggestions: {len(suggestions)}")
-    print("\n🎯 Your Campus Book Exchange now has realistic data!")
+    print("Realistic data generation complete!")
+    print(f"Summary:")
+    print(f"   Users: {len(users)}")
+    print(f"   Listings: {len(listings)}")
+    print(f"   Offers: {len(offers)}")
+    print(f"   Suggestions: {len(suggestions)}")
+    print("\n Your Campus Book Exchange now has realistic data!")
 
 if __name__ == "__main__":
     main()

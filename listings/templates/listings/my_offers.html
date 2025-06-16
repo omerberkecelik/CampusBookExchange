@@ -1,0 +1,23 @@
+{% extends "listings/base.html" %}
+{% block title %}My Offers{% endblock %}
+
+{% block content %}
+  <h1>My Offers</h1>
+
+  {% if offers %}
+    <ul>
+      {% for offer in offers %}
+        <li style="margin-bottom:12px;">
+          <strong>{{ offer.listing.book.title }}</strong> —
+          ${{ offer.offer_price }} to {{ offer.listing.student.username }}
+          <em>on {{ offer.created_at|date:"F j, Y, g:ia" }}</em>
+          {% if offer.status != 'PEN' %}
+            &ndash; <span>{{ offer.get_status_display }}</span>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>You haven’t made any offers yet.</p>
+  {% endif %}
+{% endblock %}

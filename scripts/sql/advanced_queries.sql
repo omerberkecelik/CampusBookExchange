@@ -42,11 +42,15 @@ HAVING COUNT(DISTINCT o.listing_id) > 3
 ORDER BY distinct_listings_offered DESC;
 
 -- 5) Retrieve all courses that have never had an “Available” listing
-SELECT c.id AS course_id,
+SELECT DISTINCT 
+       c.id AS course_id,
        c.course_code,
        c.course_name
 FROM Courses AS c
-LEFT JOIN BookCourseAssignments AS bca ON c.id = bca.course_id
-LEFT JOIN Listings AS l ON l.book_id = bca.book_id AND l.status = 'AVL'
+LEFT JOIN BookCourseAssignments AS bca 
+  ON c.id = bca.course_id
+LEFT JOIN Listings AS l 
+  ON l.book_id = bca.book_id 
+     AND l.status = 'AVL'
 WHERE l.id IS NULL
 ORDER BY c.course_code;

@@ -113,16 +113,17 @@ def generate_realistic_descriptions():
         
         # Get the book's associated courses to determine subject
         course_assignments = listing.book.course_assignments.all()
+        first_assignment = course_assignments.first()
         subject_context = ""
         
-        if course_assignments:
-            first_course = course_assignments.first().course
+        if first_assignment is not None:
+            first_course = first_assignment.course
             if 'COMP' in first_course.course_code:
-                subject_context = random.choice(subject_phrases.get('Computer Science', []))
+                subject_context = random.choice(subject_phrases['Computer Science'])
             elif 'MATH' in first_course.course_code:
-                subject_context = random.choice(subject_phrases.get('Mathematics', []))
+                subject_context = random.choice(subject_phrases['Mathematics'])
             elif 'LIT' in first_course.course_code:
-                subject_context = random.choice(subject_phrases.get('Literature', []))
+                subject_context = random.choice(subject_phrases['Literature'])
         
         # Build realistic description
         condition_desc = random.choice(description_templates.get(listing.condition, description_templates['GOOD']))
@@ -159,7 +160,7 @@ def generate_realistic_descriptions():
         if updated_count % 20 == 0:
             print(f"Updated {updated_count} listings...")
     
-    print(f"✅ Successfully updated {updated_count} listings with realistic descriptions.")
+    print(f" Successfully updated {updated_count} listings with realistic descriptions.")
 
 if __name__ == "__main__":
     generate_realistic_descriptions()

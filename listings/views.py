@@ -259,73 +259,130 @@ def top_listing_raw(request):
 @login_required
 def reports(request):
     """
-    Only raw SQL:
-      1) Find the listing with the most offers.
-      2) Count how many listings each course has.
-      3) Count how many listings were created in the last 7 days.
+    Show six raw-SQL reports:
+      1) Listing with most offers
+      2) Number of available listings per course
+      3) Listings created in last 7 days
+      4) Average price per author
+      5) Users with >3 distinct offers
+      6) Courses without any available listings
     """
+    # 1) Listing with most offers
     top_listing_raw = None
-    courses_data_raw = []
-    recent_count_raw = 0
-    with connection.cursor() as cursor:
-        cursor.execute("""
-            SELECT
-                l.id AS listing_id,
-                b.title AS book_title,
-                COUNT(o.id) AS total_offers
-            FROM listings_listing AS l
-            JOIN listings_offer AS o
-              ON l.id = o.listing_id
-            JOIN listings_book AS b
-              ON l.book_id = b.id
-            GROUP BY l.id, b.title
-            ORDER BY total_offers DESC
-            LIMIT 1;
+    with connection.cursor() as c:
+        c.execute("""
+            SELECT l.id, b.title, COUNT(o.id) AS total_offers
+              FROM listings_listing AS l
+         LEFT JOIN listings_offer   AS o ON l.id = o.listing_id
+         LEFT JOIN listings_book    AS b ON l.book_id  = b.id
+             GROUP BY l.id, b.title
+             ORDER BY total_offers DESC
+             LIMIT 1;
         """)
-        row = cursor.fetchone()
+        row = c.fetchone()
     if row:
         top_listing_raw = {
-            'listing_id': row[0],
-            'book_title': row[1],
+            'listing_id':   row[0],
+            'book_title':   row[1],
             'total_offers': row[2],
         }
-    with connection.cursor() as cursor:
-        cursor.execute("""
-            SELECT
-                c.id AS course_id,
-                c.course_code,
-                c.course_name,
-                COUNT(l.id) AS listing_count
-            FROM listings_course AS c
-            LEFT JOIN listings_bookcourseassignment AS bca
-              ON c.id = bca.course_id
-            LEFT JOIN listings_listing AS l
-              ON l.book_id = bca.book_id
-            GROUP BY c.id, c.course_code, c.course_name
-            ORDER BY listing_count DESC;
+
+    # 2) Number of available listings per course
+    courses_data_raw = []
+    with connection.cursor() as c:
+        c.execute("""
+            SELECT c.id, c.course_code, c.course_name, COUNT(l.id) AS listing_count
+              FROM listings_course AS c
+         LEFT JOIN listings_bookcourseassignment AS bca
+               ON c.id = bca.course_id
+         LEFT JOIN listings_listing AS l
+               ON l.book_id = bca.book_id
+              AND l.status  = 'AVL'
+             GROUP BY c.id, c.course_code, c.course_name
+             ORDER BY listing_count DESC;
         """)
-        rows = cursor.fetchall()
-    for course_id, course_code, course_name, listing_count in rows:
-        courses_data_raw.append({
-            'course_id': course_id,
-            'course_code': course_code,
-            'course_name': course_name,
-            'listing_count': listing_count,
-        })
-    with connection.cursor() as cursor:
-        cursor.execute("""
-            SELECT
-                COUNT(*) AS recent_count
-            FROM listings_listing
-            WHERE date_listed >= NOW() - INTERVAL 7 DAY;
+        for cid, code, name, cnt in c.fetchall():
+            courses_data_raw.append({
+                'course_id':     cid,
+                'course_code':   code,
+                'course_name':   name,
+                'listing_count': cnt,
+            })
+
+    # 3) Listings created in the last 7 days
+    recent_count_raw = 0
+    with connection.cursor() as c:
+        c.execute("""
+            SELECT COUNT(*) 
+              FROM listings_listing
+             WHERE date_listed >= NOW() - INTERVAL 7 DAY;
         """)
-        result = cursor.fetchone()
-        recent_count_raw = result[0] if result else 0
+        recent_count_raw = c.fetchone()[0] or 0
+
+    # 4) Average price per author (only AVL + price IS NOT NULL)
+    avg_price_per_author = []
+    with connection.cursor() as c:
+        c.execute("""
+            SELECT b.author, AVG(l.price) AS avg_price
+              FROM listings_listing AS l
+         JOIN listings_book    AS b ON l.book_id = b.id
+             WHERE l.status = 'AVL'
+               AND l.price  IS NOT NULL
+             GROUP BY b.author
+             ORDER BY avg_price DESC;
+        """)
+        for author, avgp in c.fetchall():
+            avg_price_per_author.append({
+                'author':    author,
+                'avg_price': avgp,
+            })
+
+    # 5) Users who made >3 distinct offers
+    prolific_buyers = []
+    with connection.cursor() as c:
+        c.execute("""
+            SELECT u.username, COUNT(DISTINCT o.listing_id) AS count
+              FROM listings_offer AS o
+         JOIN auth_user        AS u ON o.buyer_id = u.id
+             GROUP BY u.id, u.username
+            HAVING count > 3
+             ORDER BY count DESC;
+        """)
+        for username, count in c.fetchall():
+            prolific_buyers.append({
+                'username': username,
+                'count':    count,
+            })
+
+     # 6) Courses without any available listing (using DISTINCT)
+    courses_never_available = []
+    with connection.cursor() as c:
+        c.execute("""
+            SELECT DISTINCT
+                   c.id         AS course_id,
+                   c.course_code,
+                   c.course_name
+              FROM listings_course AS c
+         LEFT JOIN listings_bookcourseassignment AS bca
+                ON c.id = bca.course_id
+         LEFT JOIN listings_listing AS l
+                ON l.book_id = bca.book_id
+               AND l.status = 'AVL'
+             WHERE l.id IS NULL
+             ORDER BY c.course_code;
+        """)
+        for cid, code, name in c.fetchall():
+            courses_never_available.append({
+                'course_id':   cid,
+                'course_code': code,
+                'course_name': name,
+            })
+
     return render(request, 'listings/reports.html', {
-        'top_listing_raw': top_listing_raw,
-        'courses_data_raw': courses_data_raw,
-        'recent_count_raw': recent_count_raw,
+        # … your other context keys …
+        'courses_never_available': courses_never_available,
     })
+
 def listings_per_course_raw(request):
     """
     Count how many listings each course has, using raw SQL.
@@ -421,4 +478,16 @@ def top_listing_with_offers_count(request):
     return render(request, 'listings/top_listing_with_count.html', {
         'listing': listing_obj,
         'num_offers': num_offers,
+    })
+
+@login_required
+def my_offers(request):
+    """
+    Show all the offers the current user has made.
+    """
+    offers = ( Offer.objects
+                    .filter(buyer=request.user)
+                    .select_related('listing__book', 'listing__student') )
+    return render(request, 'listings/my_offers.html', {
+        'offers': offers,
     })

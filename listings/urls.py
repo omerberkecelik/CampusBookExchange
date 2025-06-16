@@ -15,7 +15,8 @@ urlpatterns = [
     path('offers/accept/<int:pk>/', views.accept_offer, name='accept_offer'),
     path('offers/reject/<int:pk>/', views.reject_offer, name='reject_offer'),
     path('reports/', views.reports, name='reports'),
+    path('offers/my/',           views.my_offers,    name='my_offers'),
     path('listings-per-course/', views.listings_per_course_raw, name='listings_per_course_raw'),
     path('top-listing-count/', views.top_listing_with_offers_count, name='top_listing_with_offers_count'),
-    path('top-listing/', views.top_listing_raw, name='top_listing_raw'),
+    path('top-listing/', views.top_listing_raw, name='top_listing_raw')
 ]

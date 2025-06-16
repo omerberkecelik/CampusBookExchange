@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from django.db.models import QuerySet
+    from .models import BookCourseAssignment
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     major = models.CharField(max_length=100, blank=True, null=True)
@@ -25,6 +27,9 @@ class Book(models.Model):
     )
     def __str__(self):
         return f"{self.title} (ISBN: {self.isbn})"
+    if TYPE_CHECKING:
+        # tell Pylance that at runtime you'll have this manager
+        course_assignments: QuerySet[BookCourseAssignment]
 class Course(models.Model):
     course_code = models.CharField(
         max_length=20,

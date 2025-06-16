@@ -10,20 +10,17 @@
     margin: 0 !important;
     padding: 0 !important;
   }
-  
   nav .nav-container {
     margin: 0 auto !important;
     max-width: 1200px !important;
     width: calc(100% - 160px) !important;
     padding: 15px 80px !important;
   }
-  
   nav a {
     text-transform: uppercase !important;
     color: white !important;
     font-weight: bold !important;
   }
-  
   /* Add side margins to content */
   .container {
     max-width: 1200px !important;
@@ -36,6 +33,7 @@
 {% block content %}
   <h1>Project Reports</h1>
 
+  <!-- 1) Listing with Most Offers -->
   <section style="margin-bottom: 40px;">
     <h2>1) Listing with Most Offers</h2>
     {% if top_listing_raw %}
@@ -48,9 +46,9 @@
       <p>No listings with offers found.</p>
     {% endif %}
   </section>
-
   <hr>
 
+  <!-- 2) Number of Listings per Course -->
   <section style="margin-bottom: 40px;">
     <h2>2) Number of Listings per Course</h2>
     {% if courses_data_raw %}
@@ -76,16 +74,59 @@
       <p>No course/listing data available.</p>
     {% endif %}
   </section>
-
   <hr>
 
+  <!-- 3) Listings Created in the Last 7 Days -->
   <section style="margin-bottom: 40px;">
     <h2>3) Listings Created in the Last 7 Days</h2>
     <p>
       <strong>{{ recent_count_raw }}</strong> listing(s) were created in the last 7 days.
     </p>
   </section>
-
   <hr>
+
+  <!-- 4) Average Price per Author -->
+  <section style="margin-bottom: 40px;">
+    <h2>4) Average Price per Author</h2>
+    {% if avg_price_per_author %}
+      <ul>
+        {% for a in avg_price_per_author %}
+          <li>{{ a.author }}: ${{ a.avg_price|floatformat:2 }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No available-priced listings to compute averages.</p>
+    {% endif %}
+  </section>
+  <hr>
+
+  <!-- 5) Users with >3 Distinct Offers -->
+  <section style="margin-bottom: 40px;">
+    <h2>5) Users with &gt;3 Distinct Offers</h2>
+    {% if prolific_buyers %}
+      <ul>
+        {% for u in prolific_buyers %}
+          <li>{{ u.username }} ({{ u.count }} distinct listings)</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No user has made more than three offers.</p>
+    {% endif %}
+  </section>
+  <hr>
+
+  <section style="margin-bottom: 40px;">
+    <h2>6) Courses Without Any Available Listings</h2>
+    {% if courses_never_available %}
+      <ul>
+        {% for c in courses_never_available %}
+          <li>{{ c.course_code }} – {{ c.course_name }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>Every course has at least one available listing.</p>
+    {% endif %}
+  </section>
+
   <p><a href="{% url 'listings:home' %}">← Back to Home</a></p>
 {% endblock %}
