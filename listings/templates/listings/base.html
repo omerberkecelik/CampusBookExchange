@@ -21,7 +21,6 @@
       </div>
       <div class="nav-right">
         {% if user.is_authenticated %}
-          <span>Hi {{ user.username }}!</span>
           <a href="{% url 'listings:create_listing' %}">List a Book</a>
           <a href="{% url 'listings:suggest_book' %}">Suggest Book</a>
           <a href="{% url 'listings:my_listings' %}">My Listings</a>

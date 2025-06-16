@@ -210,7 +210,7 @@
   margin: 60px 80px;
   border-radius: 20px;
   box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
-  max-width: calc(1100px - 160px);
+  max-width: calc(1200px - 160px);
   margin-left: auto;
   margin-right: auto;
 }
@@ -243,6 +243,26 @@
   margin-top: 0 !important;
   padding: 8px 25px !important;
   white-space: nowrap !important;
+  margin-left: 5px !important;
+}
+
+.search-section .filter-form .clear-button {
+  background-color: #8B5F3D !important;
+  border: none !important;
+  color: #fff !important;
+  flex: none !important;
+  margin-top: 0 !important;
+  padding: 8px 25px !important;
+  white-space: nowrap !important;
+  margin-left: 5px !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s ease-in-out !important;
+}
+
+.search-section .filter-form .clear-button:hover {
+  background-color: #6F452D !important;
+  color: #fff !important;
 }
 
 /* Animations */
@@ -414,7 +434,7 @@
     <section class="search-section" id="search">
       <h2 style="text-align: center; color: #5D3A1A; margin-bottom: 40px; font-family: 'Merriweather', serif;">Find Your Next Textbook</h2>
       
-      <form method="get" class="filter-form">
+      <form method="get" class="filter-form" id="search-form">
         <input
           class="input search-field"
           type="text"
@@ -443,10 +463,8 @@
         </select>
 
         <button class="button" type="submit">Search</button>
-
-        {% if query or selected_condition or selected_course %}
-          <a href="{% url 'listings:home' %}" class="button clear-button">Clear</a>
-        {% endif %}
+        <button type="button" class="button clear-button" id="clear-button">Clear</button>
+        <input type="hidden" name="scroll_pos" id="scroll-pos" value="">
       </form>
     </section>
 
@@ -539,6 +557,118 @@ document.addEventListener('DOMContentLoaded', () => {
   featureCards.forEach((card, index) => {
     card.style.transitionDelay = `${index * 0.2}s`;
   });
+  
+  // Restore scroll position after search
+  const urlParams = new URLSearchParams(window.location.search);
+  const scrollPos = urlParams.get('scroll_pos');
+  if (scrollPos && scrollPos !== '') {
+    setTimeout(() => {
+      window.scrollTo(0, parseInt(scrollPos));
+    }, 100);
+  }
+  
+  // AJAX search form submission to prevent page refresh
+  const searchForm = document.getElementById('search-form');
+  if (searchForm) {
+    searchForm.addEventListener('submit', function(e) {
+      e.preventDefault(); // Prevent default form submission
+      
+      // Get form data
+      const formData = new FormData(searchForm);
+      const params = new URLSearchParams(formData);
+      
+      // Show loading state
+      const searchButton = searchForm.querySelector('button[type="submit"]');
+      const originalText = searchButton.textContent;
+      searchButton.textContent = 'Searching...';
+      searchButton.disabled = true;
+      
+      // Make AJAX request
+      fetch(window.location.pathname + '?' + params.toString(), {
+        method: 'GET',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      })
+      .then(response => response.text())
+      .then(html => {
+        // Parse the response HTML
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        
+        // Update results section
+        const newResults = doc.querySelector('.results-section') || doc.querySelector('.no-results-section');
+        const currentResults = document.querySelector('.results-section') || document.querySelector('.no-results-section');
+        
+        if (newResults && currentResults) {
+          currentResults.replaceWith(newResults);
+        } else if (newResults) {
+          // If no current results section, add the new one
+          const mainContent = document.querySelector('.main-content .container');
+          const searchSection = document.querySelector('.search-section');
+          searchSection.insertAdjacentElement('afterend', newResults);
+        }
+        
+        // Update URL without refreshing page
+        const newUrl = window.location.pathname + '?' + params.toString();
+        window.history.pushState({}, '', newUrl);
+        
+        // Restore button state
+        searchButton.textContent = originalText;
+        searchButton.disabled = false;
+      })
+      .catch(error => {
+        console.error('Search error:', error);
+        // Restore button state
+        searchButton.textContent = originalText;
+        searchButton.disabled = false;
+      });
+    });
+  }
+  
+  // Clear button functionality
+  const clearButton = document.getElementById('clear-button');
+  if (clearButton) {
+    clearButton.addEventListener('click', function() {
+      // Clear form inputs
+      const searchInput = document.querySelector('input[name="q"]');
+      const conditionSelect = document.querySelector('select[name="condition"]');
+      const courseSelect = document.querySelector('select[name="course"]');
+      
+      if (searchInput) searchInput.value = '';
+      if (conditionSelect) conditionSelect.value = '';
+      if (courseSelect) courseSelect.value = '';
+      
+      // Clear results by making empty search
+      const emptyParams = new URLSearchParams();
+      
+      fetch(window.location.pathname, {
+        method: 'GET',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      })
+      .then(response => response.text())
+      .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        
+        // Update results section
+        const newResults = doc.querySelector('.results-section') || doc.querySelector('.no-results-section');
+        const currentResults = document.querySelector('.results-section') || document.querySelector('.no-results-section');
+        
+        if (newResults && currentResults) {
+          currentResults.replaceWith(newResults);
+        }
+        
+        // Update URL to clean state
+        window.history.pushState({}, '', window.location.pathname);
+      })
+      .catch(error => {
+        console.error('Clear error:', error);
+      });
+    });
+  }
 });
 
 // Parallax effect for hero background (if image is added)
